@@ -6,9 +6,9 @@
 - Elementos privados -> _nombre
 ### LEGIBILIDAD
 - Utilizar un espacio antes y después de los operadores binarios (como +, -, *, /)
-- No superar los 80 caracteres, para ello usar \:
-mi_variable = 10 + 20 + 30 + \
-              40 + 50 + 60 + \
+- No superar los 80 caracteres, para ello usar "\"(sin ""):
+mi_variable = 10 + 20 + 30 + "\"
+              40 + 50 + 60 + "\"
               70 + 80 + 90
 - Comentarios; se realizan con '''comentario''' o # comentario
   - Con '''_''' se escribe como:
