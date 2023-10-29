@@ -2,17 +2,20 @@ import pandas
 from tkinter.filedialog import *
 
 def open_file():
+    # abrimos los archivos con filedialog y ensenamos .csv, .xlsx,y all files
     file = askopenfilename(defaultextension=".txt",
-                                          file= [("All Files","*.*"),
-                                                 ("Excel File","*.xlsx"),
-                                                 ("CSV File",".csv")])
-    file_extension = file.split(".")[-1]
+                            filetypes= [("All Files","*.*"),
+                                    ("Excel File","*.xlsx"),
+                                    ("CSV File",".csv")])
+    file_extension = file.split(".")[-1] # cojemos solo la extension
+    # lectura de CSV
     if file_extension == "csv":
         data = pandas.read_csv(file)
-        return data
+        return data # devolvemos el datagrama
+    # lectura de EXCEL
     elif file_extension == "xlsx":
         data = pandas.read_excel(file)
-        return data
+        return data # devolvemos el datagrama
     elif file_extension == 3:
         # añadir sql
         '''
@@ -22,5 +25,4 @@ def open_file():
         conn.close()
         '''
         pass
-
-    # file.close()
+    # no necesitamos usar file.close(), askopenfilename ya lo cierra
