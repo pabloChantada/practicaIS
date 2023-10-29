@@ -8,8 +8,8 @@
 - Utilizar un espacio antes y después de los operadores binarios (como +, -, *, /)
 - No superar los 80 caracteres, para ello usar "barra invertida":
 
-mi_variable = 10 + 20 + 30 + barra invertida
-              40 + 50 + 60 + barra invertida
+mi_variable = 10 + 20 + 30 + \
+              40 + 50 + 60 + \
               70 + 80 + 90
 
 - Comentarios; se realizan con '''comentario''' o # comentario
