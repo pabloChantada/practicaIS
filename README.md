@@ -14,8 +14,8 @@ mi_variable = 10 + 20 + 30 + \
 
 - Comentarios; se realizan con '''comentario''' o # comentario
   - Con '''_''' se escribe como:
-    '''
-    comentario
+    '''\n
+    comentario\n
     '''
   - Con # se escribre con dos espacio despues del la linea y uno despues de #, la primera letra va con mayuscula:
     varible  # Comentario  
