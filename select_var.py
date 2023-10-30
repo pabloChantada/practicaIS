@@ -11,6 +11,9 @@ def show_columns(data, var = None):
         while True:
             try:
                 var_selection = int(input(f'\nSeleccione el nombre de la columna para la variable {var}: '))
+                if var_selection < 0:  # Caso de variables negativas
+                    print('\nNo se aceptan columnas negativas.')
+                    continue
                 selection = data[titulo[var_selection]]  # Cojemos del df la columna de la cabezera(titulo) seleccionada
                 return selection
             except (IndexError, ValueError):
