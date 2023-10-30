@@ -13,7 +13,7 @@ def show_columns(data, var = None):
                 var_selection = int(input(f'\nSeleccione el nombre de la columna para la variable {var}: '))
                 selection = data[titulo[var_selection]]  # Cojemos del df la columna de la cabezera(titulo) seleccionada
                 return selection
-            except (IndexError, ValueError):
+            except (IndexError, ValueError, var_selection < 0):
                 print('\nSeleccione un numero valido')
                 
 # Abirmos el archivo y lo almacenamos en data
