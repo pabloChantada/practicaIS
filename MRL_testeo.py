@@ -12,6 +12,10 @@ def mrl_testeo(x, y, x_title, y_title):                                 # Funcio
     print(f"Correlación entre {x_title} e {y_title}: {correlation}")    # Mostramos la correlacion
     # print(f"Coeficiente de la pendiente: {model.coef_[0][0]}")
     # print(f"Coeficiente de la intercepcion: {model.intercept_[0]}")
+    print("Variable x: \n",x)
+    print("Variable y: \n",y)
+    print("Bondad de ajuste: ",model.score(x, y) )
+    print("Predicción de y: \n",y_pred)
     # Graficamos los valores de x e y, y la regresion lineal
     plt.scatter(x, y)
     plt.plot(x, y_pred, color='red', 
