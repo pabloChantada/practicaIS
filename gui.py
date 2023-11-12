@@ -1,32 +1,59 @@
-import os, file_reader
+import os, pandas, sqlite3
 from tkinter import *
-from tkinter import filedialog
+from tkinter.filedialog import *
 from tkinter.messagebox import *
-from select_var import show_columns
-from MRL_testeo import mrl_testeo
+from pandastable import Table
 
 def new_file():
     window.title("Modelo de Regresión Lineal")
+    
+def open_file():
+    '''
+    Abre un archivo y devuelve un datagrama con los datos del archivo.
+    '''
+    global file, data, table
+    # Abrimos el explorador de archivos y lo guardamos en file
+    file = askopenfilename(defaultextension=".txt",
+                            filetypes= [("All Files","*.*"),
+                                    ("Excel File","*.xlsx"),
+                                    ("CSV File",".csv"),
+                                    ("SQL File",".db")])
+    if file:
+        filepath_label.config(text=file)
+        
+    file_extension = file.split(".")[-1]                # Cojemos solo la extension
+    
+    if file_extension == "csv":                         # Si la extension es csv
+        data = pandas.read_csv(file)
+    
+    elif file_extension == "xlsx":                      # Si la extension es xlsx
+        data = pandas.read_excel(file)
+    
+    elif file_extension == "db":                        # Si la extension es db
+        conn = sqlite3.connect(file)                    # Abrimos la DB y la asignamos a conn
+        data = pandas.read_sql_query\
+            ("SELECT * FROM  california_housing_dataset;", conn)  # Cojemos todas las filas
+        conn.close()                                    # Cerramos la DB
+    
+    else:                                               # Si no es ninguno de los anteriores                
+        print("No se selecciono un archivo valido o se produjo un error al leerlo.")
+        return None                                     # Devolvemos None
+    # No necesitamos usar file.close(), askopenfilename ya lo cierra
+    table = Table(dataframe, width=window_width, dataframe= data, rows=5)
+    table.show()
+    return data
 
-def executable():
-    data = file_reader.open_file()                          # Abrimos el archivo y lo guardamos en data
-    print(data)                                             # Mostramos el dataframe al usuario
 
-    x = show_columns(data, 'x')                             # SELECCION DE VARIABLE X
-    y = show_columns(data, 'y')                             # SELECCION DE VARIABLE Y
-    print("Variable X seleccionada: ",x)                    # Mostramos la variable x
-    print("Variable Y seleccionada: ",y)                    # Mostramos la variable y
-
-    x_title = x.columns[0]                                  # Mostramos el titulo de la variable x
-    y_title = y.columns[0]                                  # Mostramos el titulo de la variable y
-    mrl_testeo(x, y, x_title, y_title)                      # Mostramos el MRL
-
-def create():
-    mrl_testeo(xEntry, yEntry, "x", "y")
-
+def show_colums(data, column):
+    titulo = data.columns  # Lista con la cabezera del dataframe
+    for i in range(len(titulo)):  # Imprimimos las opciones de columnas
+        if data[titulo[i]].dtype == 'object':  # Check if column contains strings
+            continue  # Skip creating button for this column
+        Radiobutton(buttons, text=titulo[i], variable=None, value=data[titulo[i]]).grid(row=i, column=column, sticky="w")
+       
 
 def save_file():
-    file = filedialog.asksaveasfilename(initialfile="untitled.txt",
+    file = asksaveasfilename(initialfile="untitled.txt",
                                      defaultextension=".txt",
                                      filetypes=[("All Files","*.*"),
                                                  ("Text Docs",".txt")])
@@ -41,46 +68,90 @@ def save_file():
             print("not gonna work buddy")
         finally:
             file.close()
+
 def about():
     showinfo("About this progam","This is a progam writen by me :D")
 
 # -------------------WINDOW GEOMETRY-------------------
+
 window = Tk()
 window.title("Modelo de Regresión Lineal")
 file = None
 
 window_height = 720
-window_width = 720
+window_width = 950
 screen_width = window.winfo_screenwidth()
 screen_height = window.winfo_screenheight()
 x = int((screen_width/ 2) - (window_width / 2))
 y = int((screen_height/ 2) - (window_height / 2))
 window.geometry("{}x{}+{}+{}".format(window_width, window_height, x, y))
+window.resizable(False, False)
 
 # -------------------TEXT AREA-------------------
 
-xtitle = Label(window,text="Variable X: ").grid(row=0,column=0)
-xEntry = Entry(window).grid(row=0,column=1)
+# FRAME 1
+inputs = Frame(window)
+inputs.pack(side=BOTTOM, fill=X)
 
-xtitle = Label(window,text="Variable X: ").grid(row=1,column=0)
-yEntry = Entry(window).grid(row=1,column=1)
+path = Label(inputs, text="File Path: ")
+path.grid(row=4, column=0, sticky="w")
+filepath_label = Label(inputs, text="")
+filepath_label.grid(row=4, column=1, sticky="w")
 
-createButton = Button(window, text= "Create", command=create).grid(row=3,column=0 , columnspan=2)
+# FRAME 2
+dataframe = Frame(window)
+dataframe.pack(side=TOP)
+
+# FRAME 3
+buttons = Frame(window)
+buttons.pack(side=LEFT, fill=Y)
+
+data = open_file()
+
+y = show_colums(data, 0)
+x = show_colums(data, 1)
+
+# Add a new row to the dataframe frame
+title_row = Frame(window)
+title_row.pack(side=TOP)
 
 # -------------------MENU-------------------
 
 menubar = Menu(window)
 window.config(menu=menubar)
-fileMenu = Menu(menubar, tearoff=  0)
-menubar.add_cascade(label="File",menu= fileMenu)
-fileMenu.add_command(label="New file",command= new_file)
-fileMenu.add_command(label="Open file",command= executable)
-fileMenu.add_command(label="Save file",command= save_file)
+fileMenu = Menu(menubar, tearoff=0)
+menubar.add_cascade(label="File", menu=fileMenu)
+fileMenu.add_command(label="New file", command=new_file)
+fileMenu.add_command(label="Open file", command=open_file)
+fileMenu.add_command(label="Save file", command=save_file)
 fileMenu.add_separator()
-fileMenu.add_command(label="Exit",command= quit)
+fileMenu.add_command(label="Exit", command=quit)
 
-helpMenu = Menu(menubar, tearoff= 0)
-menubar.add_cascade(label="Help",menu= helpMenu)
-helpMenu.add_command(label="About",command= about)
+helpMenu = Menu(menubar, tearoff=0)
+menubar.add_cascade(label="Help", menu=helpMenu)
+helpMenu.add_command(label="About", command=about)
+
+# -------------------FILEPATH LABEL-------------------
 
 window.mainloop()
+
+
+# con desplegable
+'''opciones = [str(i) for i in range(10)]
+
+variable_x = StringVar(window)
+variable_x.set("0")  # Valor por defecto
+xtitle = Label(inputs,text="Variable X: ")\
+    .grid(row=0, column=0, sticky="w")
+xEntry = OptionMenu(inputs, variable_x, *opciones)\
+    .grid(row=0, column=1, sticky="w")
+
+variable_y = StringVar(inputs)
+variable_y.set("0")  # Valor por defecto
+ytitle = Label(inputs,text="Variable Y: ")\
+    .grid(row=1, column=0, sticky="w")
+yEntry = OptionMenu(inputs, variable_y, *opciones)\
+    .grid(row=1, column=1, sticky="w")
+
+createButton = Button(inputs, text= "Create", command=None)\
+    .grid(row=2, column=1, sticky="w")'''
