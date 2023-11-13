@@ -39,18 +39,18 @@ def open_file():
         print("No se selecciono un archivo valido o se produjo un error al leerlo.")
         return None                                     # Devolvemos None
     # No necesitamos usar file.close(), askopenfilename ya lo cierra
-    table = Table(dataframe, width=window_width, dataframe= data, rows=5)
-    table.show()
     return data
 
 
-def show_colums(data, column):
+def show_columns(data, column):
     titulo = data.columns  # Lista con la cabezera del dataframe
-    for i in range(len(titulo)):  # Imprimimos las opciones de columnas
+    var = StringVar()  # Create variable to hold selected value
+    for i in range(len(titulo)):  # Create radio button for each value
         if data[titulo[i]].dtype == 'object':  # Check if column contains strings
             continue  # Skip creating button for this column
-        Radiobutton(buttons, text=titulo[i], variable=None, value=data[titulo[i]]).grid(row=i, column=column, sticky="w")
-       
+        Radiobutton(buttons, text=titulo[i], variable=var, value=titulo[i]).\
+            grid(row=i, column=column, sticky="w")
+       # indicatoron=0, removes circles
 
 def save_file():
     file = asksaveasfilename(initialfile="untitled.txt",
@@ -107,9 +107,11 @@ buttons = Frame(window)
 buttons.pack(side=LEFT, fill=Y)
 
 data = open_file()
+table = Table(dataframe, width=window_width, dataframe= data, rows=5)
+table.show()
 
-y = show_colums(data, 0)
-x = show_colums(data, 1)
+y = show_columns(data, 0)
+x = show_columns(data, 1)
 
 # Add a new row to the dataframe frame
 title_row = Frame(window)
