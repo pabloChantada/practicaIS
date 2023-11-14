@@ -13,6 +13,7 @@ def mrl_testeo(x, y, x_title, y_title):
     y1 = np.reshape(y, -1)                                              # poder calcular la correlacion, con los vectores                                           
     correlation, _ = pearsonr(x1, y1)                                   # normales (1D) no funciona
     
+    # mostrar con un alerta la correlacion y la bondad de ajuste
     print(f"Correlación entre {x_title} e {y_title}: {correlation}")    # Mostramos la correlacion
     print("Variable x: \n",x)                                           # Mostramos los valores de x
     print("Variable y: \n",y)                                           # Mostramos los valores de y

@@ -76,10 +76,12 @@ def create():
     y_col = data[titulo[int(variable_y.get())]]
     if x_col.equals(y_col):
         showerror("Error", "Las variables no pueden ser iguales")
-    x_col_reshaped = x_col.values.reshape(-1, 1)
-    y_col_reshaped = y_col.values.reshape(-1, 1)
-    mrl_testeo(x_col_reshaped, y_col_reshaped, titulo[int(variable_x.get())], titulo[int(variable_y.get())])
-    
+    else:
+        x_col_reshaped = x_col.values.reshape(-1, 1)
+        y_col_reshaped = y_col.values.reshape(-1, 1)
+        mrl_testeo(x_col_reshaped, y_col_reshaped, titulo[int(variable_x.get())], titulo[int(variable_y.get())])
+        
+        
 
 # -------------------WINDOW GEOMETRY-------------------
 
@@ -158,23 +160,3 @@ helpMenu.add_command(label="About", command=about)
 # -------------------FILEPATH LABEL-------------------
 
 window.mainloop()
-
-# con desplegable
-'''opciones = [str(i) for i in range(10)]
-
-variable_x = StringVar(window)
-variable_x.set("0")  # Valor por defecto
-xtitle = Label(inputs,text="Variable X: ")\
-    .grid(row=0, column=0, sticky="w")
-xEntry = OptionMenu(inputs, variable_x, *opciones)\
-    .grid(row=0, column=1, sticky="w")
-
-variable_y = StringVar(inputs)
-variable_y.set("0")  # Valor por defecto
-ytitle = Label(inputs,text="Variable Y: ")\
-    .grid(row=1, column=0, sticky="w")
-yEntry = OptionMenu(inputs, variable_y, *opciones)\
-    .grid(row=1, column=1, sticky="w")
-
-createButton = Button(inputs, text= "Create", command=None)\
-    .grid(row=2, column=1, sticky="w")'''
