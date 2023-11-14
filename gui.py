@@ -3,6 +3,7 @@ from tkinter import *
 from tkinter.filedialog import *
 from tkinter.messagebox import *
 from pandastable import Table
+from MRL_testeo import *
 
 def new_file():
     window.title("Modelo de Regresión Lineal")
@@ -42,15 +43,13 @@ def open_file():
     return data
 
 
-def show_columns(data, column):
-    titulo = data.columns  # Lista con la cabezera del dataframe
-    var = StringVar()  # Create variable to hold selected value
-    for i in range(len(titulo)):  # Create radio button for each value
-        if data[titulo[i]].dtype == 'object':  # Check if column contains strings
-            continue  # Skip creating button for this column
-        Radiobutton(buttons, text=titulo[i], variable=var, value=titulo[i]).\
-            grid(row=i, column=column, sticky="w")
-       # indicatoron=0, removes circles
+def show_columns(data):
+    global titulo
+    titulo = data.columns                               # Lista con la cabezera del dataframe
+    for i in range(len(titulo)):                        # Imprimimos las opciones de columnas
+        if data[titulo[i]].dtype == "object":           # Si la columna es de tipo object
+            continue
+        Label(buttons, text=f"{i}. {titulo[i]}", font=("Consolas",15)).grid(row=i, column=0,sticky="w")
 
 def save_file():
     file = asksaveasfilename(initialfile="untitled.txt",
@@ -71,6 +70,12 @@ def save_file():
 
 def about():
     showinfo("About this progam","This is a progam writen by me :D")
+
+def create():
+    x_col = data[titulo[int(variable_x.get())]]
+    y_col = data[titulo[int(variable_y.get())]]
+    mrl_testeo(x_col, y_col, titulo[int(variable_x.get())], titulo[int(variable_y.get())])
+    
 
 # -------------------WINDOW GEOMETRY-------------------
 
@@ -98,6 +103,8 @@ path.grid(row=4, column=0, sticky="w")
 filepath_label = Label(inputs, text="")
 filepath_label.grid(row=4, column=1, sticky="w")
 
+data = open_file()
+
 # FRAME 2
 dataframe = Frame(window)
 dataframe.pack(side=TOP)
@@ -105,17 +112,28 @@ dataframe.pack(side=TOP)
 # FRAME 3
 buttons = Frame(window)
 buttons.pack(side=LEFT, fill=Y)
+show_columns(data)
+x = IntVar()
+y = IntVar()
+opciones = [str(i) for i in range(len(titulo))]
 
-data = open_file()
-table = Table(dataframe, width=window_width, dataframe= data, rows=5)
+variable_x = StringVar(buttons)
+variable_x.set("0")  # Default value
+xtitle = Label(buttons, text="Variable X: ").grid(row=len(titulo), column=0, sticky="w")
+xEntry = OptionMenu(buttons, variable_x, *opciones).grid(row=len(titulo), column=1, sticky="w")
+
+variable_y = StringVar(buttons)
+variable_y.set("0")  # Default value
+ytitle = Label(buttons, text="Variable Y: ").grid(row=len(titulo) + 1, column=0, sticky="w")
+yEntry = OptionMenu(buttons, variable_y, *opciones).grid(row=len(titulo) + 1, column=1, sticky="w")
+
+createButton = Button(buttons, text= "Create", command=create).grid(row=len(titulo) + 2, column=0, sticky="w")
+
+
+table = Table(dataframe, width=window_width, dataframe=data, rows=5)
 table.show()
 
-y = show_columns(data, 0)
-x = show_columns(data, 1)
-
 # Add a new row to the dataframe frame
-title_row = Frame(window)
-title_row.pack(side=TOP)
 
 # -------------------MENU-------------------
 
@@ -136,7 +154,6 @@ helpMenu.add_command(label="About", command=about)
 # -------------------FILEPATH LABEL-------------------
 
 window.mainloop()
-
 
 # con desplegable
 '''opciones = [str(i) for i in range(10)]
