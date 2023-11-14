@@ -74,6 +74,8 @@ def about():
 def create():
     x_col = data[titulo[int(variable_x.get())]]
     y_col = data[titulo[int(variable_y.get())]]
+    if x_col == y_col:
+        showerror("Error", "Las variables no pueden ser iguales")
     mrl_testeo(x_col, y_col, titulo[int(variable_x.get())], titulo[int(variable_y.get())])
     
 
