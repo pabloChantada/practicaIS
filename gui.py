@@ -74,9 +74,11 @@ def about():
 def create():
     x_col = data[titulo[int(variable_x.get())]]
     y_col = data[titulo[int(variable_y.get())]]
-    if x_col == y_col:
+    if x_col.equals(y_col):
         showerror("Error", "Las variables no pueden ser iguales")
-    mrl_testeo(x_col, y_col, titulo[int(variable_x.get())], titulo[int(variable_y.get())])
+    x_col_reshaped = x_col.values.reshape(-1, 1)
+    y_col_reshaped = y_col.values.reshape(-1, 1)
+    mrl_testeo(x_col_reshaped, y_col_reshaped, titulo[int(variable_x.get())], titulo[int(variable_y.get())])
     
 
 # -------------------WINDOW GEOMETRY-------------------
