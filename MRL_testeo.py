@@ -15,7 +15,7 @@ def mrl_testeo(x, y, x_title, y_title):
     y1 = np.reshape(y, -1)                                              # poder calcular la correlacion, con los vectores                                           
     correlation, _ = pearsonr(x1, y1)                                   # normales (1D) no funciona
     bondad = model.score(x, y)                                          # Calculamos la bondad de ajuste
-    Prediction = Predictions(x, y, x_title, y_title, correlation)       #almacenamos las variables y sus correlaciones en una clase
+    prediction = Predictions(x, y, x_title, y_title, correlation)       #almacenamos las variables y sus correlaciones en una clase
     guardar_prediccion(Prediction, 'predicciones.pkl')                  #guardamos las predicciones en un archivo
     reult_str = f"Bondad de ajuste: {bondad}\
         \nCorrelación entre {x_title} e {y_title}: {correlation}"
@@ -30,9 +30,3 @@ def mrl_testeo(x, y, x_title, y_title):
     plt.title('Regresión Lineal y Correlación entre X e Y')             # Titulo de la grafica
     plt.show()                                                          # Mostramos la grafica
     showinfo("Resultados", reult_str)   # Mostramos los resultados en una ventana de mensaje
-
-predicciones_cargadas = cargar_predicciones('predicciones.pkl')
-
-# Imprimir las predicciones cargadas
-for prediccion in predicciones_cargadas:
-    print(prediccion)
