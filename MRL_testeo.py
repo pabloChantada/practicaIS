@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from scipy.stats import pearsonr
 import numpy as np
 from tkinter.messagebox import showinfo
+from predicciones_MRL import *
 
 def mrl_testeo(x, y, x_title, y_title):
     '''
@@ -14,7 +15,8 @@ def mrl_testeo(x, y, x_title, y_title):
     y1 = np.reshape(y, -1)                                              # poder calcular la correlacion, con los vectores                                           
     correlation, _ = pearsonr(x1, y1)                                   # normales (1D) no funciona
     bondad = model.score(x, y)                                          # Calculamos la bondad de ajuste
-    
+    prediction = Predictions(x, y, x_title, y_title, correlation)       #almacenamos las variables y sus correlaciones en una clase
+    guardar_prediccion(Prediction, 'predicciones.pkl')                  #guardamos las predicciones en un archivo
     reult_str = f"Bondad de ajuste: {bondad}\
         \nCorrelación entre {x_title} e {y_title}: {correlation}"
 
