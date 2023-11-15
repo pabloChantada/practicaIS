@@ -26,14 +26,4 @@ class Predictions:
                     Label(new_window, text=f"Bondad de ajuste: \n{prediccion.bondad:.4f}").pack(side=TOP)
                     break
                 except EOFError:
-                    break
-
-# Función para guardar una predicción en memoria usando pickle
-def guardar_prediccion(prediction, archivo):
-    if os.path.exists(archivo):                     #si ya existe el archivo predicciones.plk
-        with open(archivo, 'ab') as file:           #abrimos el archivo en modo binario para añadir 
-            pickle.dump(prediction, file)           #las predicciones al final del archivo
-
-    else:                                           #si no existe el archivo predicciones.plk         
-        with open(archivo, 'wb') as file:           #creamos un archivo en modo binario
-            pickle.dump(prediction, file)           #para escribir la primera prediccion       
+                    break 
