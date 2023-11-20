@@ -46,17 +46,8 @@ def open_file(file=None):
         case _:           
             print("No se selecciono un archivo valido o se produjo un error al leerlo.")
             return None                                     # Devolvemos None
-    show_columns(data)
     if file_extension != "pkl":
         return data
-
-def show_columns(data):
-    global titulo
-    titulo = data.columns                               # Lista con la cabezera del dataframe
-    for i in range(len(titulo)):                        # Imprimimos las opciones de columnas
-        if data[titulo[i]].dtype == "object":           # Si la columna es de tipo object
-            continue
-        Label(buttons, text=f"{i}. {titulo[i]}", font=("Consolas",15)).grid(row=i, column=0,sticky="w")
 
 
 def save_file():
@@ -77,16 +68,14 @@ def about():
 
 def create():
     global prediction
-    x_titulo = titulo[int(variable_x.get())]
-    y_titulo = titulo[int(variable_y.get())]
-    x_col = data[x_titulo]
-    y_col = data[y_titulo]
+    x_col = data[variable_x.get()]
+    y_col = data[variable_y.get()]
     if x_col.equals(y_col):
         showerror("Error", "Las variables no pueden ser iguales")
     else:
         x_col_reshaped = x_col.values.reshape(-1, 1)
         y_col_reshaped = y_col.values.reshape(-1, 1)
-        prediction = mrl_testeo(x_col_reshaped, y_col_reshaped, x_titulo, y_titulo)        
+        prediction = mrl_testeo(x_col_reshaped, y_col_reshaped, x_col, y_col)        
         
 
 # -------------------WINDOW GEOMETRY-------------------
@@ -115,7 +104,6 @@ path.grid(row=4, column=0, sticky="w")
 filepath_label = Label(inputs, text="")
 filepath_label.grid(row=4, column=1, sticky="w")
 
-
 # FRAME 2
 dataframe = Frame(window)
 dataframe.pack(side=TOP)
@@ -127,15 +115,43 @@ x = IntVar()
 y = IntVar()
 data = open_file('databases\\housing.csv')
 titulo = data.columns
-opciones = [str(i) for i in range(len(titulo))]
-
+# opciones = [i for i in titulo if not isinstance(data[i], str)]
+opciones = []
+for i in titulo:
+    if not isinstance(data[i][1], str):
+        opciones.append(i)
+        
 variable_x = StringVar(buttons)
-variable_x.set("0")  # Default value
+variable_x.set("Seleccionar")  # Default value
 xtitle = Label(buttons, text="Variable X: ").grid(row=len(titulo), column=0, sticky="w")
 xEntry = OptionMenu(buttons, variable_x, *opciones).grid(row=len(titulo), column=1, sticky="w")
 
 variable_y = StringVar(buttons)
-variable_y.set("0")  # Default value
+variable_y.set("Seleccionar")  # Default value
+ytitle = Label(buttons, text="Variable Y: ").grid(row=len(titulo) + 1, column=0, sticky="w")
+yEntry = OptionMenu(buttons, variable_y, *opciones).grid(row=len(titulo) + 1, column=1, sticky="w")
+
+createButton = Button(buttons, text="Create", command=create).grid(row=len(titulo) + 2, column=0, sticky="w")
+
+table = Table(dataframe, width=window_width, dataframe=data, rows=5)
+table.show()
+
+# Add a new row to the dataframe frame
+
+# -------------------MENU-------------------
+
+menubar = Menu(window)
+window.config(menu=menubar)
+fileMenu = Menu(menubar, tearoff=0)
+menubar.add_cascade(label="File", menu=fileMenu)
+fileMenu.add_command(label="New file", command=new_file)
+fileMenu.add_command(label="Open file", command=open_file)
+fileMenu.add_command(label="Save file", command=save_file)
+fileMenu.add_separator()
+fileMenu.add_command(label="Exit", command=quit)
+
+helpMenu = Menu(menubar, tearoff=0)
+menubar.add_cascade(label="Help", menu=helpMenu)
 ytitle = Label(buttons, text="Variable Y: ").grid(row=len(titulo) + 1, column=0, sticky="w")
 yEntry = OptionMenu(buttons, variable_y, *opciones).grid(row=len(titulo) + 1, column=1, sticky="w")
 
