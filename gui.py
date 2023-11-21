@@ -75,7 +75,7 @@ def create():
     else:
         x_col_reshaped = x_col.values.reshape(-1, 1)
         y_col_reshaped = y_col.values.reshape(-1, 1)
-        prediction = mrl_testeo_gui(window, x_col_reshaped, y_col_reshaped, x_col, y_col)        
+        prediction = mrl_testeo(window, x_col_reshaped, y_col_reshaped, variable_x.get(), variable_y.get())        
         
 
 # -------------------WINDOW GEOMETRY-------------------
@@ -84,7 +84,7 @@ window = Tk()
 window.title("Modelo de Regresión Lineal")
 file = None
 
-window_height = 720
+window_height = 780
 window_width = 950
 screen_width = window.winfo_screenwidth()
 screen_height = window.winfo_screenheight()
@@ -111,8 +111,7 @@ dataframe.pack(side=TOP)
 # FRAME 3
 buttons = Frame(window)
 buttons.pack(side=LEFT, fill=Y)
-x = IntVar()
-y = IntVar()
+
 data = open_file('databases\\housing.csv')
 titulo = data.columns
 # opciones = [i for i in titulo if not isinstance(data[i], str)]
@@ -156,7 +155,6 @@ ytitle = Label(buttons, text="Variable Y: ").grid(row=len(titulo) + 1, column=0,
 yEntry = OptionMenu(buttons, variable_y, *opciones).grid(row=len(titulo) + 1, column=1, sticky="w")
 
 createButton = Button(buttons, text= "Create", command=create).grid(row=len(titulo) + 2, column=0, sticky="w")
-
 
 table = Table(dataframe, width=window_width, dataframe=data, rows=5)
 table.show()
