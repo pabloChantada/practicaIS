@@ -49,8 +49,6 @@ def open_file(file=None):
     if file_extension != "pkl":
         # Eliminar filas con Nan
         data = data.dropna()
-        # Identificar columnas con NaN
-        nan_columns = data.columns[data.isnull().any()].tolist() 
         return data
 
 
@@ -72,6 +70,7 @@ def about():
 
 def create():
     global prediction
+
     x_col = data[variable_x.get()]
     y_col = data[variable_y.get()]
     if x_col.equals(y_col):
@@ -80,7 +79,6 @@ def create():
         x_col_reshaped = x_col.values.reshape(-1, 1)
         y_col_reshaped = y_col.values.reshape(-1, 1)
         prediction = mrl_testeo(window, x_col_reshaped, y_col_reshaped, variable_x.get(), variable_y.get())        
-        
 
 # -------------------WINDOW GEOMETRY-------------------
 
@@ -138,8 +136,6 @@ createButton = Button(buttons, text="Create", command=create).grid(row=len(titul
 
 table = Table(dataframe, width=window_width, dataframe=data, rows=5)
 table.show()
-
-# Add a new row to the dataframe frame
 
 # -------------------MENU-------------------
 
