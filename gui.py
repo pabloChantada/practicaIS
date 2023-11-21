@@ -48,9 +48,7 @@ def open_file(file=None):
             return None                                     # Devolvemos None
     if file_extension != "pkl":
         # Eliminar filas con Nan
-        data = data.dropna()
-        # Identificar columnas con NaN
-        nan_columns = data.columns[data.isnull().any()].tolist() 
+        data = data.dropna() 
         return data
 
 
