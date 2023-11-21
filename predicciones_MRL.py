@@ -3,12 +3,15 @@ import os
 
 #Creamos la clase predictions para almacenar las variables y su correlación
 class Predictions:
-    def __init__(self, x, y, x_title, y_title, correlation):
+    def __init__(self, x, y, x_title, y_title, punto_corte_x, m, b, correlation):
                                                     #La clase guarda la y, la y, el nombre de las respectivas columnas y su correlación
         self.x = x
         self.y = y
         self.x_title= x_title
         self.y_title = y_title
+        self.punto_corte_x = punto_corte_x
+        self.m = m
+        self.b = b
         self.correlation = correlation
 
     def __str__(self):                              #la cadena que devuelve representa una instancia de esa clase       
