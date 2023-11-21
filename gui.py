@@ -75,7 +75,7 @@ def create():
     else:
         x_col_reshaped = x_col.values.reshape(-1, 1)
         y_col_reshaped = y_col.values.reshape(-1, 1)
-        prediction = mrl_testeo(x_col_reshaped, y_col_reshaped, x_col, y_col)        
+        prediction = mrl_testeo_gui(window, x_col_reshaped, y_col_reshaped, x_col, y_col)        
         
 
 # -------------------WINDOW GEOMETRY-------------------
