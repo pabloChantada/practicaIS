@@ -70,5 +70,4 @@ def mrl_testeo_gui(window, x, y, x_title, y_title):
     canvas = FigureCanvasTkAgg(fig, master=window)
     canvas_widget = canvas.get_tk_widget()
     canvas_widget.pack(side=TOP, fill=BOTH, expand=1)
-
-
+    return prediction

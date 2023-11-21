@@ -17,5 +17,5 @@ mi_variable = 10 + 20 + 30 + \
     '''
     comentario
     '''
-  - Con # se escribre con dos espacio despues del la linea y uno despues de #, la primera letra va con mayuscula:
-    varible  # Comentario  
+  - Con # se escribe con dos espacio despues del la linea o todos en la misma columna (mirar archivos como ejemplo)
+    y uno despues de #, la primera letra va con mayuscula: varible  # Comentario  
