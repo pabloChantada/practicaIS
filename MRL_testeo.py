@@ -19,10 +19,10 @@ def mrl_testeo(window, x, y, x_title, y_title):
     y1 = np.reshape(y, -1)                                              # poder calcular la correlacion, con los vectores 
     m = model.coef_[0][0]
     b = model.intercept_[0]
-
+    punto_corte_x = -b/m
     correlation, _ = pearsonr(x1, y1)                                   # normales (1D) no funciona
     bondad = model.score(x, y)                                          # Calculamos la bondad de ajuste
-    prediction = Predictions(x, y, x_title, y_title, correlation, bondad)       #almacenamos las variables y sus correlaciones en una clase
+    prediction = Predictions(x, y, x_title, y_title, punto_corte_x, m,b, correlation, bondad)       #almacenamos las variables y sus correlaciones en una clase
     graph(window, x, y, x_title, y_title, y_pred)
     
     return prediction, bondad, m, b
