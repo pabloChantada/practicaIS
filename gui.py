@@ -57,13 +57,19 @@ def save_file():
                              defaultextension=".pkl",
                              filetypes=[("Pickle Files",".pkl")])
     if file:
-        if os.path.exists(file):                     #si ya existe el archivo predicciones.plk
-            with open(file, 'ab') as file:           #abrimos el archivo en modo binario para añadir 
-                pickle.dump(prediction, file)           #las predicciones al final del archivo
+        if os.path.exists(file):                     
+            with open(file, 'ab') as f:           
+                try:
+                    pickle.dump(prediction, f)           
+                except TypeError:
+                    showerror("Error", "Cannot pickle the object")   
 
-        else:                                           #si no existe el archivo predicciones.plk         
-            with open(file, 'wb') as file:           #creamos un archivo en modo binario
-                pickle.dump(prediction, file)           #para escribir la primera prediccion    
+        else:                                           
+            with open(file, 'wb') as f:           
+                try:
+                    pickle.dump(prediction, f)           
+                except TypeError:
+                    showerror("Error", "Cannot pickle the object")   
 
 def about():
     showinfo("About this progam","This is a progam writen by me :D")
@@ -133,6 +139,7 @@ ytitle = Label(buttons, text="Variable Y: ").grid(row=len(titulo) + 1, column=0,
 yEntry = OptionMenu(buttons, variable_y, *opciones).grid(row=len(titulo) + 1, column=1, sticky="w")
 
 createButton = Button(buttons, text="Create", command=create).grid(row=len(titulo) + 2, column=0, sticky="w")
+
 
 table = Table(dataframe, width=window_width, dataframe=data, rows=5)
 table.show()

@@ -3,7 +3,7 @@ from tkinter import *
 
 #Creamos la clase predictions para almacenar las variables y su correlación
 class Predictions:
-    def __init__(self, x, y, x_title, y_title, punto_corte_x, m, b, correlation, bondad):
+    def __init__(self, x, y, x_title, y_title, punto_corte_x, m, b, correlation, bondad, description):
                                                     #La clase guarda la y, la y, el nombre de las respectivas columnas y su correlación
         self.x = x
         self.y = y
@@ -14,6 +14,7 @@ class Predictions:
         self.m = m
         self.b = b
         self.bondad = bondad                          #La bondad de ajuste se calcula en el programa principal
+        self.description = description
 
     def load_file(window, file):
         with open(file, 'rb') as f:
