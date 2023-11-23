@@ -46,8 +46,6 @@ def graph(window, x, y, x_title, y_title, y_pred, error):
     ax = fig.gca()
     ax.scatter(x, y)
     ax.plot(x, y_pred, color='red', linewidth=2, label='Regresión lineal')
-    ax.set_xlabel(x_title)
-    ax.set_ylabel(y_title)
     ax.legend()
     ax.set_title('Regresión Lineal y Correlación entre X e Y')
 
@@ -67,7 +65,7 @@ def graph(window, x, y, x_title, y_title, y_pred, error):
 
     if 'description' in globals() and description.winfo_exists():
         description.destroy()
-    description = Text(window, height=2, width=50)
+    description = Text(window, height=3, width=50)
     description.pack(side=BOTTOM)
     description.insert("1.0", "Enter description here")  # Add starting text
 
