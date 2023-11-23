@@ -130,12 +130,12 @@ for i in titulo:
         
 variable_x = StringVar(buttons)
 variable_x.set("Select")  # Default value
-xtitle = Label(buttons, text="Var X: ").grid(row=len(titulo), column=0, sticky="w")
+xtitle = Label(buttons, text="Variable X: ").grid(row=len(titulo), column=0, sticky="w")
 xEntry = OptionMenu(buttons, variable_x, *opciones).grid(row=len(titulo), column=1, sticky="w")
 
 variable_y = StringVar(buttons)
 variable_y.set("Select")  # Default value
-ytitle = Label(buttons, text="Var Y: ").grid(row=len(titulo), column=2, sticky="w")
+ytitle = Label(buttons, text="Variable Y: ").grid(row=len(titulo), column=2, sticky="w")
 yEntry = OptionMenu(buttons, variable_y, *opciones).grid(row=len(titulo), column=3, sticky="w")
 
 createButton = Button(buttons, text="Create", command=create).grid(row=len(titulo) + 1, column=0, sticky="w")
