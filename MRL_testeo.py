@@ -58,16 +58,16 @@ def graph(window, x, y, x_title, y_title, y_pred, error):
         ecuacion_label.destroy()
         error_label.destroy()
 
-    bondad_label = Label(window, text=f"Bondad de ajuste: {bondad:.4f}")
-    bondad_label.pack(side=BOTTOM)
     ecuacion_label = Label(window, text=f"Ecuación de la recta: y = {m:.4f}x + {b:.4f}")
     ecuacion_label.pack(side=BOTTOM)
+    bondad_label = Label(window, text=f"Bondad de ajuste (R^2): {bondad:.4f}")
+    bondad_label.pack(side=BOTTOM)
     error_label = Label(window, text=f"Error cometido: {error}")
     error_label.pack(side=BOTTOM)
 
     if 'description' in globals() and description.winfo_exists():
         description.destroy()
-    description = Text(window, height=3, width=50)
+    description = Text(window, height=2, width=50)
     description.pack(side=BOTTOM)
     description.insert("1.0", "Enter description here")  # Add starting text
 
@@ -75,4 +75,4 @@ def graph(window, x, y, x_title, y_title, y_pred, error):
         canvas.get_tk_widget().destroy()
 
     canvas = FigureCanvasTkAgg(fig, master=window)
-    canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
+    canvas.get_tk_widget().pack(side=LEFT, fill=BOTH)

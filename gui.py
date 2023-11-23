@@ -7,8 +7,6 @@ from MRL_testeo import *
 from predicciones_MRL import Predictions
 import pickle
 
-def new_file():
-    window.title("Modelo de Regresión Lineal")
     
 def open_file(file=None):
     '''
@@ -94,8 +92,8 @@ window = Tk()
 window.title("Modelo de Regresión Lineal")
 file = None
 
-window_height = 780
-window_width = 950
+window_height = 850
+window_width = 1080
 screen_width = window.winfo_screenwidth()
 screen_height = window.winfo_screenheight()
 x = int((screen_width/ 2) - (window_width / 2))
@@ -131,16 +129,16 @@ for i in titulo:
         opciones.append(i)
         
 variable_x = StringVar(buttons)
-variable_x.set("Seleccionar")  # Default value
-xtitle = Label(buttons, text="Variable X: ").grid(row=len(titulo), column=0, sticky="w")
+variable_x.set("Select")  # Default value
+xtitle = Label(buttons, text="Var X: ").grid(row=len(titulo), column=0, sticky="w")
 xEntry = OptionMenu(buttons, variable_x, *opciones).grid(row=len(titulo), column=1, sticky="w")
 
 variable_y = StringVar(buttons)
-variable_y.set("Seleccionar")  # Default value
-ytitle = Label(buttons, text="Variable Y: ").grid(row=len(titulo) + 1, column=0, sticky="w")
-yEntry = OptionMenu(buttons, variable_y, *opciones).grid(row=len(titulo) + 1, column=1, sticky="w")
+variable_y.set("Select")  # Default value
+ytitle = Label(buttons, text="Var Y: ").grid(row=len(titulo), column=2, sticky="w")
+yEntry = OptionMenu(buttons, variable_y, *opciones).grid(row=len(titulo), column=3, sticky="w")
 
-createButton = Button(buttons, text="Create", command=create).grid(row=len(titulo) + 2, column=0, sticky="w")
+createButton = Button(buttons, text="Create", command=create).grid(row=len(titulo) + 1, column=0, sticky="w")
 
 
 table = Table(dataframe, width=window_width, dataframe=data, rows=5)
@@ -152,23 +150,12 @@ menubar = Menu(window)
 window.config(menu=menubar)
 fileMenu = Menu(menubar, tearoff=0)
 menubar.add_cascade(label="File", menu=fileMenu)
-fileMenu.add_command(label="New file", command=new_file)
 fileMenu.add_command(label="Open file", command=open_file)
 fileMenu.add_command(label="Save file", command=save_file)
 fileMenu.add_separator()
 fileMenu.add_command(label="Exit", command=quit)
 
 helpMenu = Menu(menubar, tearoff=0)
-menubar.add_cascade(label="Help", menu=helpMenu)
-ytitle = Label(buttons, text="Variable Y: ").grid(row=len(titulo) + 1, column=0, sticky="w")
-yEntry = OptionMenu(buttons, variable_y, *opciones).grid(row=len(titulo) + 1, column=1, sticky="w")
-
-createButton = Button(buttons, text= "Create", command=create).grid(row=len(titulo) + 2, column=0, sticky="w")
-
-table = Table(dataframe, width=window_width, dataframe=data, rows=5)
-table.show()
-
-# Add a new row to the dataframe frame
 
 # -------------------MENU-------------------
 
@@ -176,7 +163,6 @@ menubar = Menu(window)
 window.config(menu=menubar)
 fileMenu = Menu(menubar, tearoff=0)
 menubar.add_cascade(label="File", menu=fileMenu)
-fileMenu.add_command(label="New file", command=new_file)
 fileMenu.add_command(label="Open file", command=open_file)
 fileMenu.add_command(label="Save file", command=save_file)
 fileMenu.add_separator()
