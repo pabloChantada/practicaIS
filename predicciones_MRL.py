@@ -31,4 +31,3 @@ class Predictions:
                     break
                 except EOFError:
                     break
-Predictions

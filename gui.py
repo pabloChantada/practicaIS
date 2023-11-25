@@ -93,11 +93,11 @@ window.title("Modelo de Regresión Lineal")
 file = None
 
 window_height = 850
-window_width = 1080
+window_width = 1000
 screen_width = window.winfo_screenwidth()
 screen_height = window.winfo_screenheight()
 x = int((screen_width/ 2) - (window_width / 2))
-y = int((screen_height/ 2) - (window_height / 2))
+y = int((screen_height/ 2.15) - (window_height / 2))  # Adjusted y coordinate
 window.geometry("{}x{}+{}+{}".format(window_width, window_height, x, y))
 window.resizable(False, False)
 
