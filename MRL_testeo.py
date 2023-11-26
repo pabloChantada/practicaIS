@@ -1,104 +1,121 @@
-from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
-from scipy.stats import pearsonr
-import numpy as np
-from predicciones_MRL import *
 from tkinter import Label
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from sklearn.metrics import mean_squared_error
 from tkinter.messagebox import showerror
-def mrl_testeo(window, x, y, x_title, y_title):
-    '''
-    Muestra la grafica de dispersion, la regresion lineal, la correlacion y la prediccion de y.
-    '''               
-    global bondad, m, b, bondad_label, ecuacion_label
-
-    plt.close('all')  # Close all existing figures
-    model = LinearRegression().fit(x, y)                                # Creamos el modelo de regresion lineal 
-    y_pred = model.predict(x)                                           # Predecimos los valores de y
-    x1 = np.reshape(x, -1)                                              # Redimensionamos los valores de x e y para  
-    y1 = np.reshape(y, -1)                                              # poder calcular la correlacion, con los vectores 
-    m = model.coef_[0][0]
-    b = model.intercept_[0]
-    punto_corte_x = -b/m
-    error = mean_squared_error(y, y_pred)                                                # de una dimension no funciona
-    correlation, _ = pearsonr(x1, y1)                                   # normales (1D) no funciona
-    bondad = model.score(x, y)            
-    graph(window, x, y, x_title, y_title, y_pred, error)                       # Calculamos la bondad de ajuste
-    prediction = Predictions(x, y, x_title, y_title, punto_corte_x, m,b, correlation, bondad, description)       #almacenamos las variables y sus correlaciones en una clase
-    
-    return prediction
-
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from predicciones_MRL import *
 
 bondad_label = None
 ecuacion_label = None
 error_label = None
-selectXEntry = None
-selectXVariable = None
-yLabel = None
-predictionButton = None
+prediction_button = None
+select_x_entry = None
+select_x_label = None
+
+def modelo_regresion_lineal(window, x, y, x_title, y_title):
+    '''
+    Muestra el grafico de regresion lineal, la ecuacion de la recta, la bondad de ajuste y el error cometido.
+    '''               
+    global bondad, m, b, bondad_label, ecuacion_label
+
+    model = LinearRegression().fit(x, y)                       # Creamos el modelo de regresion lineal 
+    y_pred = model.predict(x)                                  # Predecimos los valores de y
+    m = model.coef_[0][0]                                      # Coeficiente de la recta
+    b = model.intercept_[0]                                    # Termino independiente de la recta
+    punto_corte_x = -b/m                                       # Punto de corte en el eje x
+    error = mean_squared_error(y, y_pred)                      # Error cometido
+    bondad = model.score(x, y)                                 # Bondad de ajuste (R^2)
+    graph(window, x, y, x_title, y_title, y_pred, error)       # Graficamos y generamos los labels
+    # Guardamos los resultados de la regresion lineal en una clase
+    prediction = Predictions(x, y, x_title, y_title, punto_corte_x, m,b, bondad, description)
+    
+    return prediction
 
 def clear_labels():
-    global bondad_label, ecuacion_label, error_label, selectXVariable, yLabel,\
-        description, selectXEntry, predictionButton
+    '''
+    Elimina los elementos de la ventana.
+    '''
+    global bondad_label, ecuacion_label, error_label, select_x_label,\
+        description, select_x_entry, prediction_button
+    # Eliminamos los labels
     if bondad_label is not None:
         bondad_label.config(text="")
     if ecuacion_label is not None:
         ecuacion_label.config(text="")
     if error_label is not None:
         error_label.config(text="")
-    if selectXVariable is not None:
-        selectXVariable.config(text="")
-    if yLabel is not None:
-        yLabel.config(text="")
-    if predictionButton is not None:
-        predictionButton.destroy()
-        predictionButton = None
-    if selectXEntry is not None:
-        selectXEntry.destroy()
-        selectXEntry = None
-    
+    if select_x_label is not None:
+        select_x_label.config(text="")
+    # Eliminamos los entrys y botones
+    if prediction_button is not None:
+        prediction_button.destroy()
+        prediction_button = None
+    if select_x_entry is not None:
+        select_x_entry.destroy()
+        select_x_entry = None
+
+def prediction():
+    '''
+    Genera una prediccion de y para un valor de x.
+    '''
+    try:
+        x_value = float(select_x_entry.get())       # Valor de x para generar la prediccion de y
+        y_prediction = m * x_value + b              # Prediccion de y
+        # Modificamos el label de la ecuacion de la recta para mostrar la prediccion de y
+        ecuacion_label.config(text=f"Ecuación de la recta: {m:.4f}x + {b:.4f} = {y_prediction:.4f}")
+    except ValueError:
+        showerror("Error", "El valor de x debe ser un número")
 
 def graph(window, x, y, x_title, y_title, y_pred, error):
-    global fig, canvas, description, bondad_label, ecuacion_label, error_label, selectXVariable, yLabel, predictionButton, selectXEntry
+    '''
+    Genera el grafico de regresion lineal y los labels necesarios.
+    '''
+    global fig, canvas, description, bondad_label, ecuacion_label, error_label, \
+        select_x_entry, prediction_button, select_x_label
     
+    # Eliminamos los elementos de la ventana que no podemos con clear_labels()
     if 'fig' in globals():
         plt.close(fig)  # Close the previous figure
-
-    fig = plt.figure()
-    ax = fig.gca()
-    ax.scatter(x, y)
-    ax.plot(x, y_pred, color='red', linewidth=2, label='Regresión lineal')
-    ax.legend()
-    ax.set_xlabel(x_title)
-    ax.set_ylabel(y_title)
-    ax.set_title('Regresión Lineal y Correlación entre X e Y')
-
-    clear_labels()
-
-    # ====================LABELS====================
-
-    graph_labels = Frame(window)
-    graph_labels.pack(side=BOTTOM)
-
     if 'description' in globals() and description is not None:
         description.destroy()
-
-    description = Text(graph_labels, height=3, width=30)
-    description.grid(row=0, column=0)
-    description.insert("1.0", "Enter description here")  # Add starting text
+    if 'canvas' in globals() and canvas is not None:
+        canvas.get_tk_widget().destroy()
     
+    fig = plt.figure()                                                      # Creamos la figura
+    ax = fig.gca()                                                          # Cojemos los ejes
+    ax.scatter(x, y)                                                        # Pintamos los puntos
+    ax.plot(x, y_pred, color='red', linewidth=2, label='Regresión lineal')  # Pintamos la recta de regresion lineal
+    ax.legend()                                                             # Mostramos la leyenda
+    ax.set_xlabel(x_title)                                                  # Ponemos el titulo del eje x
+    ax.set_ylabel(y_title)                                                  # Ponemos el titulo del eje y                         
+    ax.set_title('Regresión Lineal y Correlación entre X e Y')              # Ponemos el titulo del grafico
+
+    clear_labels()  # Eliminamos los labels y entrys anteriores   
+
+    # ====================GENERACION DE LABELS====================
+
+    graph_labels = Frame(window)                            # Creamos el frame para los labels
+    graph_labels.pack(side=BOTTOM)                          # Posicion del frame
+
+    description = Text(graph_labels, height=3, width=30)    # Creamos el label para la descripcion
+    description.grid(row=0, column=0)                       # Posicion del label
+    description.insert("1.0", "Enter description here")     # Texto por defecto
+    
+    # -------------------ECUACION DE LA RECTA Y BOTON DE PREDICCION-------------------
     ecuacion_label = Label(graph_labels, text=f"Ecuación de la recta: {m:.4f}x + {b:.4f} = y")
     ecuacion_label.grid(row=1, column=0, pady=1, sticky="w")
-    predictionButton = Button(graph_labels, text="Predecir", width=15, command=prediction)
-    predictionButton.grid(row=1, column=1, pady=1, sticky="w")
+    prediction_button = Button(graph_labels, text="Predecir", width=15, command=prediction)
+    prediction_button.grid(row=1, column=1, pady=1, sticky="w")
 
-    selectXVariable = Label(graph_labels, text="Valor de x para generar la prediccion de y: ")
-    selectXVariable.grid(row=2, column=0, pady=1, sticky="w")
-    selectXEntry = Entry(graph_labels, width=20)
-    selectXEntry.insert(0, x_title)
-    selectXEntry.grid(row=2, column=1, pady=1, sticky="w")
+    # -------------------VALOR DE X PARA GENERAR LA PREDICCION DE Y-------------------
+    select_x_label = Label(graph_labels, text="Valor de x para generar la prediccion de y: ")
+    select_x_label.grid(row=2, column=0, pady=1, sticky="w")
+    select_x_entry = Entry(graph_labels, width=20)
+    select_x_entry.insert(0, x_title)
+    select_x_entry.grid(row=2, column=1, pady=1, sticky="w")
     
+    # -------------------BONDAD DE AJUSTE Y ERROR COMETIDO-------------------
     bondad_label = Label(graph_labels, text=f"Bondad de ajuste (R^2): {bondad:.4f}")
     bondad_label.grid(row=3, column=0, pady=1, sticky="w")
     
@@ -106,15 +123,6 @@ def graph(window, x, y, x_title, y_title, y_pred, error):
     error_label.grid(row=4, column=0, pady=2, sticky="w")
 
     # ====================GRAFICO====================
-    if 'canvas' in globals() and canvas is not None:
-        canvas.get_tk_widget().destroy()
+
     canvas = FigureCanvasTkAgg(fig, master=window)
     canvas.get_tk_widget().pack(side=LEFT)
-
-def prediction():
-    try:
-        x_value = float(selectXEntry.get())
-        y_value = m * x_value + b 
-        ecuacion_label.config(text=f"Ecuación de la recta: {m:.4f}x + {b:.4f} = {y_value:.4f}")
-    except ValueError:
-        showerror("Error", "El valor de x debe ser un número")

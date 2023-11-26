@@ -1,177 +1,171 @@
-import os, pandas, sqlite3
+import pandas, sqlite3, pickle
 from tkinter import *
 from tkinter.filedialog import *
 from tkinter.messagebox import *
 from pandastable import Table
-from MRL_testeo import *
+from MRL_testeo import modelo_regresion_lineal as mrl
 from predicciones_MRL import Predictions
-import pickle
 
+# ===================MENU SUPERIOR===================
     
 def open_file(file=None):
     '''
     Abre un archivo y devuelve un datagrama con los datos del archivo.
     '''
-    global data, table, filepath_label
-    # Abrimos el explorador de archivos y lo guardamos en file
-    if file == None:
-        file = askopenfilename(defaultextension=".txt",
-                                filetypes= [("All Files","*.*"),
-                                        ("Excel File","*.xlsx"),
+    global data, table, file_path_label
+    
+    # Creamos esta comprobacion para que no se abra el explorador de archivos al incio
+    # y cargar un archivo por defecto
+    if file == None:                            
+        file = askopenfilename(defaultextension=".txt",             # Abrimos el explorador de archivos
+                                filetypes= [("All Files","*.*"),    # y mostramos los archivos que se 
+                                        ("Excel File","*.xlsx"),    # pueden abrir
                                         ("CSV File",".csv"),
                                         ("SQL File",".db"),
                                         ("Pickle File",".plk")])
     else:
         file = file
+    
     if file:
-        filepath_label.config(text=file)
-        
+        file_path_label.config(text=f"File Path: {file}")  # Mostramos la ruta del archivo en el label    
     file_extension = file.split(".")[-1]                # Cojemos solo la extension
+    
     match file_extension:                               # Comparamos la extension
         case "csv":                                     # Si la extension es csv
             data = pandas.read_csv(file)
-        
         case "xlsx":                                    # Si la extension es xlsx
             data = pandas.read_excel(file)
-        
         case "db":                                      # Si la extension es db
-            conn = sqlite3.connect(file)                    # Abrimos la DB y la asignamos a conn
-            data = pandas.read_sql_query("SELECT * FROM  california_housing_dataset;", conn)  # Cojemos todas las filas
-            conn.close()                                    # Cerramos la DB
+            conn = sqlite3.connect(file)                # Abrimos la DB
+            # Cojemos todas las filas de la tabla california_housing_dataset
+            data = pandas.read_sql_query("SELECT * FROM  california_housing_dataset;", conn)
+            conn.close()                                # Cerramos la DB
         case "pkl":
-            # Función para cargar las predicciones desde el archivo usando pickle
-            Predictions.load_file(window, file)
-        case _:           
-            print("No se selecciono un archivo valido o se produjo un error al leerlo.")
-            return None                                     # Devolvemos None
-    if file_extension != "pkl":
-        # Eliminar filas con Nan
-        data = data.dropna()
-        return data
-
+            Predictions.load_file(window, file)         # Cargamos el archivo pickle
+        case _:                                         # Caso de fallo                         
+            showerror("Error al abrir el archivo",\
+                      "No se selecciono un archivo valido o se produjo un error al leerlo.")
+            return None                             
+        
+    if file_extension != "pkl":                         # Si la extension no es pkl (tiene su propia carga de datos)
+        data = data.dropna()                            # Eliminamos los valores nulos
+        return data                                     # Devolvemos el datagrama
 
 def save_file():
-    file = asksaveasfilename(initialfile="prediction.pkl",
+    '''
+    Guarda un archivo en formato pickle.
+    '''
+    file = asksaveasfilename(initialfile="prediction.pkl",          # Mostramos el explorador de archivos
                              defaultextension=".pkl",
                              filetypes=[("Pickle Files",".pkl")])
-    if file:
-        if os.path.exists(file):                     
-            with open(file, 'ab') as f:           
-                try:
-                    pickle.dump(prediction, f)           
-                except TypeError:
-                    showerror("Error", "Cannot pickle the object")   
-
-        else:                                           
-            with open(file, 'wb') as f:           
-                try:
-                    pickle.dump(prediction, f)           
-                except TypeError:
-                    showerror("Error", "Cannot pickle the object")   
-
-
+    if file:                                                        # Si el archivo ya existe
+        with open(file, 'wb') as f:                                 # Abriremos el archivo en modo escritura binaria
+            try:
+                pickle.dump(prediction, f)                          # Guardamos el objeto en el archivo
+            except TypeError:
+                showerror("Error", "Cannot pickle the object")      # Si no se puede guardar el objeto
 
 def about():
-    showinfo("About this progam","This is a progam writen by me :D")
+    showinfo("Autores", "Pablo Chantada Saborido\n"        # Mostramos un mensaje con los autores
+                        "Pablo Verdes\n"
+                        "Claudia Vidal\n"
+                        "Aldana Medyna\n"
+                        "Ana Valls")
+
+# ===================CREADOR DE MODELOS===================
 
 def create():
-    global prediction
+    '''
+    Crea el modelo de regresion lineal.
+    '''
+    global prediction                       # Hacemos la variable global para poder guardarla
 
-    x_col = data[variable_x.get()]
-    y_col = data[variable_y.get()]
-    if x_col.equals(y_col):
+    x_col = data[variable_x.get()]          # Cojemos la columna de la variable x
+    y_col = data[variable_y.get()]          # Cojemos la columna de la variable y
+    if x_col.equals(y_col):                 # Comprobamos que las variables no sean iguales       
         showerror("Error", "Las variables no pueden ser iguales")
     else:
-        x_col_reshaped = x_col.values.reshape(-1, 1)
-        y_col_reshaped = y_col.values.reshape(-1, 1)
-        prediction = mrl_testeo(window, x_col_reshaped, y_col_reshaped, variable_x.get(), variable_y.get())        
+        x_col_reshaped = x_col.values.reshape(-1, 1)  # Redimensionamos los valores de x
+        y_col_reshaped = y_col.values.reshape(-1, 1)  # Redimensionamos los valores de y
+        # Guardamos el resultado de la funcion mrl_testeo en la variable prediction
+        prediction = mrl(window, x_col_reshaped, y_col_reshaped, variable_x.get(), variable_y.get())        
 
-# -------------------WINDOW GEOMETRY-------------------
+# ===================GEOMETRIA DE LA VENTANA===================
 
-window = Tk()
-window.title("Modelo de Regresión Lineal")
-file = None
+window = Tk()                                      # Creamos la ventana
 
-window_height = 850
-window_width = 1000
-screen_width = window.winfo_screenwidth()
-screen_height = window.winfo_screenheight()
-x = int((screen_width/ 2) - (window_width / 2))
-y = int((screen_height/ 2.15) - (window_height / 2))  # Adjusted y coordinate
-window.geometry("{}x{}+{}+{}".format(window_width, window_height, x, y))
-window.resizable(False, False)
+window.title("Modelo de Regresión Lineal")         # Titulo de la ventana
 
-# -------------------TEXT AREA-------------------
+window_height = 850                                # Altura de la ventana
+window_width = 1000                                # Ancho de la ventana
+screen_height = window.winfo_screenheight()        # Alto de la pantalla
+screen_width = window.winfo_screenwidth()          # Largo de la pantalla
+x = int((screen_width/ 2) - (window_width / 2))       # Ajustamos la coordenada x a la pantalla
+y = int((screen_height/ 2.15) - (window_height / 2))  # Ajustamos la coordenada y a la pantalla
+window.geometry("{}x{}+{}+{}".format(window_width, window_height, x, y))    # Ajustamos la geometria de la ventana
+window.resizable(False, False)                     # Hacemos que la ventana no se pueda redimensionar
 
-# FRAME 1
-inputs = Frame(window)
-inputs.pack(side=BOTTOM, fill=X)
+# ===================FRAMES===================
 
-path = Label(inputs, text="File Path: ")
-path.grid(row=4, column=0, sticky="w")
-filepath_label = Label(inputs, text="")
-filepath_label.grid(row=4, column=1, sticky="w")
+# -------------------FILE PATH-------------------
+file_path_frame = Frame(window)                     # Creamos el frame para la ruta del archivo
+file_path_frame.pack(side=BOTTOM, fill=X)           # Posicion del frame
+file_path_label = Label(file_path_frame, text="File Path: ")  # Label para mostrar la ruta del archivo
+file_path_label.grid(row=4, column=1, sticky="w")   # Posicion del label
 
-# FRAME 2
-dataframe = Frame(window)
-dataframe.pack(side=TOP)
-
-# FRAME 3
-buttons = Frame(window)
-buttons.pack(side=LEFT, fill=Y)
-
-data = open_file('databases\\housing.csv')
-titulo = data.columns
+data = open_file('databases\\housing.csv')          # Abrimos el archivo por defecto
+titulo = data.columns                               # Cojemos los titulos de las columnas
 # opciones = [i for i in titulo if not isinstance(data[i], str)]
-opciones = []
+opciones = []                                       # Lista para guardar las opciones de las variables
 for i in titulo:
-    if not isinstance(data[i][1], str):
+    if not isinstance(data[i][1], str):             # Evitamos las columnas con strings
         opciones.append(i)
-        
-variable_x = StringVar(buttons)
-variable_x.set("Select")  # Default value
-xtitle = Label(buttons, text="Variable X: ").grid(row=len(titulo), column=0, sticky="w")
-xEntry = OptionMenu(buttons, variable_x, *opciones).grid(row=len(titulo), column=1, sticky="w")
 
-variable_y = StringVar(buttons)
-variable_y.set("Select")  # Default value
-ytitle = Label(buttons, text="Variable Y: ").grid(row=len(titulo), column=2, sticky="w")
-yEntry = OptionMenu(buttons, variable_y, *opciones).grid(row=len(titulo), column=3, sticky="w")
+# -------------------DATAFRAME-------------------
+dataframe = Frame(window)                           # Creamos el frame para el dataframe
+dataframe.pack(side=TOP)                            # Posicion del frame
+# Creamos la tabla con el dataframe
+table = Table(dataframe, width=window_width, dataframe=data)
+table.show()                                        # Mostramos la tabla
 
-createButton = Button(buttons, text="Create", command=create).grid(row=len(titulo) + 1, column=0, sticky="w")
+# -------------------BOTONES-------------------
+buttons = Frame(window)                             # Creamos el frame para los botones 
+buttons.pack(side=LEFT, fill=Y)                     # Posicion del frame
 
+# -------------------VARIABLE X-------------------
+variable_x = StringVar(buttons)                     # Creamos la variable de strings para la variable x
+variable_x.set("Select")                            # Valor por defecto
+x_title = Label(buttons, text="Variable X: ").\
+    grid(row=len(titulo), column=0, sticky="w")
+x_entry = OptionMenu(buttons, variable_x, *opciones).\
+    grid(row=len(titulo), column=1, sticky="w")
 
-table = Table(dataframe, width=window_width, dataframe=data, rows=5)
-table.show()
+# -------------------VARIABLE Y-------------------
+variable_y = StringVar(buttons)                     # Creamos la variable de strings para la variable y
+variable_y.set("Select")  # Default value           # Valor por defecto
+y_title = Label(buttons, text="Variable Y: ").\
+    grid(row=len(titulo), column=2, sticky="w")
+y_entry = OptionMenu(buttons, variable_y, *opciones).\
+    grid(row=len(titulo), column=3, sticky="w")
 
-# -------------------MENU-------------------
+# -------------------BOTON CREAR-------------------
 
-menubar = Menu(window)
-window.config(menu=menubar)
-fileMenu = Menu(menubar, tearoff=0)
-menubar.add_cascade(label="File", menu=fileMenu)
-fileMenu.add_command(label="Open file", command=open_file)
-fileMenu.add_command(label="Save file", command=save_file)
-fileMenu.add_separator()
-fileMenu.add_command(label="Exit", command=quit)
+create_button = Button(buttons, text="Create", command=create).\
+    grid(row=len(titulo) + 1, column=0, sticky="w")
 
-helpMenu = Menu(menubar, tearoff=0)
+# ===================MENU SUPERIOR COMANDOS===================
 
-# -------------------MENU-------------------
+menu_bar = Menu(window)                                      # Creamos la barra de menu
+window.config(menu=menu_bar)                                 # Añadimos la barra de menu a la ventana
+file_menu = Menu(menu_bar, tearoff=0)                        # Creamos el menu de archivo
+menu_bar.add_cascade(label="File", menu=file_menu)           # Añadimos el menu de archivo a la barra de menu
+file_menu.add_command(label="Open file", command=open_file)  # Añadimos la opcion de abrir archivo al menu de archivo
+file_menu.add_command(label="Save file", command=save_file)  # Añadimos la opcion de guardar archivo al menu de archivo
+file_menu.add_separator()                                    # Añadimos una separacion al menu de archivo
+file_menu.add_command(label="Exit", command=quit)            # Añadimos la opcion de salir al menu de archivo
 
-menubar = Menu(window)
-window.config(menu=menubar)
-fileMenu = Menu(menubar, tearoff=0)
-menubar.add_cascade(label="File", menu=fileMenu)
-fileMenu.add_command(label="Open file", command=open_file)
-fileMenu.add_command(label="Save file", command=save_file)
-fileMenu.add_separator()
-fileMenu.add_command(label="Exit", command=quit)
+help_menu = Menu(menu_bar, tearoff=0)                        # Creamos el menu de ayuda
+menu_bar.add_cascade(label="Help", menu=help_menu)           # Añadimos el menu de ayuda a la barra de menu
+help_menu.add_command(label="About", command=about)          # Añadimos la opcion de about al menu de ayuda
 
-helpMenu = Menu(menubar, tearoff=0)
-menubar.add_cascade(label="Help", menu=helpMenu)
-helpMenu.add_command(label="About", command=about)
-
-# -------------------FILEPATH LABEL-------------------
-
-window.mainloop()
+window.mainloop()                                            # Bucle principal de la ventana
