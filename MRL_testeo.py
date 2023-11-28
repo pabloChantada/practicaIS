@@ -27,7 +27,7 @@ def modelo_regresion_lineal(window, x, y, x_title, y_title):
     punto_corte_x = -b/m                                       # Punto de corte en el eje x
     error = mean_squared_error(y, y_pred)                      # Error cometido
     bondad = model.score(x, y)                                 # Bondad de ajuste (R^2)
-    description_var = graph(window, x, y, x_title, y_title, y_pred, error)       # Graficamos y generamos los labels
+    graph(window, x, y, x_title, y_title, y_pred, error)       # Graficamos y generamos los labels
     # Guardamos los resultados de la regresion lineal en una clase
     prediction = Predictions(punto_corte_x, m,b, error,bondad, description_var)  #no soy capaz de meter la descripción
     return prediction
