@@ -5,7 +5,6 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from predicciones_MRL import *
-import os
 
 bondad_label = None
 ecuacion_label = None
@@ -18,7 +17,7 @@ def modelo_regresion_lineal(window, x, y, x_title, y_title):
     '''
     Muestra el grafico de regresion lineal, la ecuacion de la recta, la bondad de ajuste y el error cometido.
     '''               
-    global bondad, m, b, bondad_label, ecuacion_label, description_var
+    global bondad, m, b, bondad_label, ecuacion_label
 
     model = LinearRegression().fit(x, y)                       # Creamos el modelo de regresion lineal 
     y_pred = model.predict(x)                                  # Predecimos los valores de y
@@ -27,7 +26,7 @@ def modelo_regresion_lineal(window, x, y, x_title, y_title):
     punto_corte_x = -b/m                                       # Punto de corte en el eje x
     error = mean_squared_error(y, y_pred)                      # Error cometido
     bondad = model.score(x, y)                                 # Bondad de ajuste (R^2)
-    graph(window, x, y, x_title, y_title, y_pred, error)       # Graficamos y generamos los labels
+    description_var = graph(window, x, y, x_title, y_title, y_pred, error)       # Graficamos y generamos los labels
     # Guardamos los resultados de la regresion lineal en una clase
     prediction = Predictions(punto_corte_x, m,b, error,bondad, description_var)  #no soy capaz de meter la descripción
     return prediction
