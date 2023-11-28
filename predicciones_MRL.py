@@ -1,4 +1,4 @@
-import pickle, os
+import pickle
 from tkinter import *
 from dataclasses import dataclass
 
@@ -11,7 +11,7 @@ class Predictions:
     error: float
     bondad: float
     description: str
-
+        
     @classmethod
     def load_file(window, file):
         with open(file, 'rb') as f:

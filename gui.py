@@ -4,6 +4,7 @@ from tkinter.filedialog import *
 from tkinter.messagebox import *
 from pandastable import Table
 from MRL_testeo import modelo_regresion_lineal as mrl
+from MRL_testeo import get_description
 from predicciones_MRL import Predictions
 
 # ===================MENU SUPERIOR===================
@@ -55,9 +56,13 @@ def save_file():
     '''
     Guarda un archivo en formato pickle.
     '''
+    #window.bind("<Control-s>", save_file)                           # Asignamos el atajo de teclado
+    prediction.description = get_description()                      # Guardamos la descripcion
+    
     file = asksaveasfilename(initialfile="prediction.pkl",          # Mostramos el explorador de archivos
                              defaultextension=".pkl",
                              filetypes=[("Pickle Files",".pkl")])
+
     if file:                                                        # Si el archivo ya existe
         with open(file, 'wb') as f:                                 # Abriremos el archivo en modo escritura binaria
             try:

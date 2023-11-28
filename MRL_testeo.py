@@ -5,6 +5,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from predicciones_MRL import *
+import os
 
 bondad_label = None
 ecuacion_label = None
@@ -17,7 +18,7 @@ def modelo_regresion_lineal(window, x, y, x_title, y_title):
     '''
     Muestra el grafico de regresion lineal, la ecuacion de la recta, la bondad de ajuste y el error cometido.
     '''               
-    global bondad, m, b, bondad_label, ecuacion_label
+    global bondad, m, b, bondad_label, ecuacion_label, description_var
 
     model = LinearRegression().fit(x, y)                       # Creamos el modelo de regresion lineal 
     y_pred = model.predict(x)                                  # Predecimos los valores de y
@@ -26,10 +27,9 @@ def modelo_regresion_lineal(window, x, y, x_title, y_title):
     punto_corte_x = -b/m                                       # Punto de corte en el eje x
     error = mean_squared_error(y, y_pred)                      # Error cometido
     bondad = model.score(x, y)                                 # Bondad de ajuste (R^2)
-    graph(window, x, y, x_title, y_title, y_pred, error)       # Graficamos y generamos los labels
+    description_var = graph(window, x, y, x_title, y_title, y_pred, error)       # Graficamos y generamos los labels
     # Guardamos los resultados de la regresion lineal en una clase
-    prediction = Predictions(punto_corte_x, m,b, error,bondad, "a")  #no soy capaz de meter la descripción
-    
+    prediction = Predictions(punto_corte_x, m,b, error,bondad, description_var)  #no soy capaz de meter la descripción
     return prediction
 
 def clear_labels():
@@ -37,7 +37,8 @@ def clear_labels():
     Elimina los elementos de la ventana.
     '''
     global bondad_label, ecuacion_label, error_label, select_x_label,\
-        description, select_x_entry, prediction_button
+        select_x_entry, prediction_button
+
     # Eliminamos los labels
     if bondad_label is not None:
         bondad_label.config(text="")
@@ -66,13 +67,19 @@ def prediction():
         ecuacion_label.config(text=f"Ecuación de la recta: {m:.4f}x + {b:.4f} = {y_prediction:.4f}")
     except ValueError:
         showerror("Error", "El valor de x debe ser un número")
+        
+def get_description():
+    '''
+    Devuelve la descripcion actual del modelo.
+    '''
+    return description.get("1.0", "end-1c") 
 
 def graph(window, x, y, x_title, y_title, y_pred, error):
     '''
     Genera el grafico de regresion lineal y los labels necesarios.
     '''
-    global fig, canvas, description, bondad_label, ecuacion_label, error_label, \
-        select_x_entry, prediction_button, select_x_label
+    global fig, canvas, bondad_label, ecuacion_label, error_label, \
+        select_x_entry, prediction_button, select_x_label, description
     
     # Eliminamos los elementos de la ventana que no podemos con clear_labels()
     if 'fig' in globals():
@@ -98,9 +105,9 @@ def graph(window, x, y, x_title, y_title, y_pred, error):
     graph_labels = Frame(window)                            # Creamos el frame para los labels
     graph_labels.pack(side=BOTTOM)                          # Posicion del frame
 
-    description = Text(graph_labels, height=3, width=30)    # Creamos el label para la descripcion
-    description.grid(row=0, column=0)                       # Posicion del label
-    description.insert("1.0", "Enter description here")     # Texto por defecto
+    description = Text(graph_labels, height=3, width=30)    # Create the label for the description
+    description.grid(row=0, column=0)                       # Position the label
+    description.insert(END, "Descripción: ")                # Insertamos una descripcion
     
     # -------------------ECUACION DE LA RECTA Y BOTON DE PREDICCION-------------------
     ecuacion_label = Label(graph_labels, text=f"Ecuación de la recta: {m:.4f}x + {b:.4f} = y")
