@@ -28,7 +28,7 @@ def modelo_regresion_lineal(window, x, y, x_title, y_title):
     bondad = model.score(x, y)                                 # Bondad de ajuste (R^2)
     graph(window, x, y, x_title, y_title, y_pred, error)       # Graficamos y generamos los labels
     # Guardamos los resultados de la regresion lineal en una clase
-    prediction = Predictions(x, y, x_title, y_title, punto_corte_x, m,b, bondad, description)
+    prediction = Predictions(punto_corte_x, m,b, error,bondad, "a")  #no soy capaz de meter la descripción
     
     return prediction
 
