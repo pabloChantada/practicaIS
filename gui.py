@@ -1,11 +1,10 @@
-import pandas, sqlite3, pickle
+import pandas, sqlite3, pickle, sys, MRL_testeo
 from tkinter import *
 from tkinter.filedialog import *
 from tkinter.messagebox import *
 from pandastable import Table
 from MRL_testeo import modelo_regresion_lineal as mrl
-from MRL_testeo import get_description
-from predicciones_MRL import Predictions
+from predicciones_MRL import generate_labels_prediction
 
 # ===================MENU SUPERIOR===================
     
@@ -42,7 +41,7 @@ def open_file(file=None):
             data = pandas.read_sql_query("SELECT * FROM  california_housing_dataset;", conn)
             conn.close()                                # Cerramos la DB
         case "pkl":
-            Predictions.load_file(window, file)         # Cargamos el archivo pickle
+            load_file()                                 # Cargamos el archivo pickle
         case _:                                         # Caso de fallo                         
             showerror("Error al abrir el archivo",\
                       "No se selecciono un archivo valido o se produjo un error al leerlo.")
@@ -56,19 +55,43 @@ def save_file():
     '''
     Guarda un archivo en formato pickle.
     '''
-    #window.bind("<Control-s>", save_file)                           # Asignamos el atajo de teclado
-    prediction.description = get_description()                      # Guardamos la descripcion
-    
-    file = asksaveasfilename(initialfile="prediction.pkl",          # Mostramos el explorador de archivos
-                             defaultextension=".pkl",
-                             filetypes=[("Pickle Files",".pkl")])
+    try:
+        prediction.description = MRL_testeo.get_description()            # Guardamos la descripcion
+        
+        file = asksaveasfilename(initialfile="prediction.pkl",           # Mostramos el explorador de archivos
+                                defaultextension=".pkl",
+                                filetypes=[("Pickle Files",".pkl")])
 
-    if file:                                                        # Si el archivo ya existe
-        with open(file, 'wb') as f:                                 # Abriremos el archivo en modo escritura binaria
+        if file:                                                         # Si el archivo ya existe
+            with open(file, 'wb') as f:                                  # Abriremos el archivo en modo escritura binaria
+                pickle.dump(prediction, f)                           # Guardamos el objeto en el archivo
+    except Exception as e:
+        showerror("Error", "Error al guardar el archivo: " + str(e))
+
+def load_file():
+    file = askopenfilename(defaultextension=".txt",         # Abrimos el explorador de archivos
+                        filetypes= [("All Files","*.*"),    # y mostramos los archivos que se 
+                                ("Excel File","*.xlsx"),    # pueden abrir
+                                ("CSV File",".csv"),
+                                ("SQL File",".db"),
+                                ("Pickle File",".plk")])
+    with open(file, 'rb') as f:
+        while True:
             try:
-                pickle.dump(prediction, f)                          # Guardamos el objeto en el archivo
-            except TypeError:
-                showerror("Error", "Cannot pickle the object")      # Si no se puede guardar el objeto
+                prediction = pickle.load(f)
+                if MRL_testeo.ecuacion_label is None:
+                    generate_labels_prediction(window, prediction)
+                else:
+                    MRL_testeo.description.delete("1.0", "end")
+                    MRL_testeo.description.insert("end", prediction.description)
+                    MRL_testeo.select_x_entry.delete(0, END)
+                    MRL_testeo.select_x_entry.insert(0, prediction.x_title)
+                    MRL_testeo.ecuacion_label.config(text=f"Ecuación de la recta: {prediction.m:.4f}x + {prediction.b:.4f} = y")
+                    MRL_testeo.bondad_label.config(text=f"Bondad de ajuste (R^2): {prediction.bondad:.4f}")
+                    MRL_testeo.error_label.config(text=f"Error: {prediction.error:.4f}")
+                break
+            except EOFError:
+                showerror("Error", "Error al seleccionar el archivo")
 
 def about():
     showinfo("Autores", "Pablo Chantada Saborido\n"        # Mostramos un mensaje con los autores
@@ -166,6 +189,7 @@ file_menu = Menu(menu_bar, tearoff=0)                        # Creamos el menu d
 menu_bar.add_cascade(label="File", menu=file_menu)           # Añadimos el menu de archivo a la barra de menu
 file_menu.add_command(label="Open file", command=open_file)  # Añadimos la opcion de abrir archivo al menu de archivo
 file_menu.add_command(label="Save file", command=save_file)  # Añadimos la opcion de guardar archivo al menu de archivo
+file_menu.add_command(label="Load file", command=load_file)
 file_menu.add_separator()                                    # Añadimos una separacion al menu de archivo
 file_menu.add_command(label="Exit", command=quit)            # Añadimos la opcion de salir al menu de archivo
 
@@ -173,4 +197,5 @@ help_menu = Menu(menu_bar, tearoff=0)                        # Creamos el menu d
 menu_bar.add_cascade(label="Help", menu=help_menu)           # Añadimos el menu de ayuda a la barra de menu
 help_menu.add_command(label="About", command=about)          # Añadimos la opcion de about al menu de ayuda
 
+# window.bind("<Destroy>", sys.exit)                         # Cerramos la ventana al pulsar la X
 window.mainloop()                                            # Bucle principal de la ventana
