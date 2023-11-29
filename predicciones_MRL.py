@@ -1,8 +1,9 @@
-import pickle, os
+import pickle
 from tkinter import *
 from tkinter.messagebox import showerror
 
-#Creamos la clase predictions para almacenar las variables y su correlación
+#Creamos la clase predictions para almacenar los datos de los MRL.
+@dataclass
 class Predictions:
     def __init__(self, x, y, x_title, y_title, punto_corte_x, m, b, correlation, bondad, description):
                                                     #La clase guarda la y, la y, el nombre de las respectivas columnas y su correlación
