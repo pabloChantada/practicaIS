@@ -14,3 +14,6 @@
 # Preguntas
 
 - Preguntar si el archivo pkl se carga en open file o load file
+
+## Pasar de .py a .exe
+py -3.11 -m PyInstaller --onefile --noconsole --icon=icono.ico lol.py -F -w 
