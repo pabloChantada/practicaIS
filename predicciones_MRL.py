@@ -1,5 +1,6 @@
 import pickle, os
 from tkinter import *
+from tkinter.messagebox import showerror
 
 #Creamos la clase predictions para almacenar las variables y su correlación
 class Predictions:
@@ -15,19 +16,42 @@ class Predictions:
         self.b = b
         self.bondad = bondad                          #La bondad de ajuste se calcula en el programa principal
         self.description = description
+        
+    def save_to_file(self, file):
+            data_to_save = {
+                "x": self.x,
+                "y": self.y,
+                "x_title": self.x_title,
+                "y_title": self.y_title,
+                "correlation": self.correlation,
+                "punto_corte_x": self.punto_corte_x,
+                "m": self.m,
+                "b": self.b,
+                "bondad": self.bondad,
+                "description": self.description
+            }
+
+            with open(file, 'wb') as file_stream:
+                pickle.dump(data_to_save, file_stream)
 
     def load_file(window, file):
-        with open(file, 'rb') as f:
-            while True:                                 #mientras haya predicciones
-                try:
-                    prediccion = pickle.load(f)      #carga los datos 
-                    new_window = Toplevel(window)
-                    new_window.resizable(False, False)
-                    new_window.title(str(file.split("/")[-1]))
-                    Label(new_window, text=f"Variable X: {prediccion.x_title}: \n{prediccion.x}").pack(side=LEFT)
-                    Label(new_window, text=f"Variable Y: {prediccion.y_title}: \n{prediccion.y}").pack(side=LEFT)
-                    Label(new_window, text=f"Correlación: \n{prediccion.correlation:.4f}").pack(side=TOP)
-                    Label(new_window, text=f"Bondad de ajuste: \n{prediccion.bondad:.4f}").pack(side=TOP)
-                    break
-                except EOFError:
-                    break
+        try:
+            with open(file, 'rb') as f:
+                prediction = pickle.load(f)
+                pickle.dump(prediction, file)
+
+            new_window = Toplevel(window)
+            new_window.resizable(False, False)
+            new_window.title(os.path.basename(file))
+
+            Label(new_window, text=f"Variable X ({prediction.x_title}):").grid(row=0, column=0, sticky="w")
+            Label(new_window, text=str(prediction.x)).grid(row=0, column=1, sticky="w")
+
+            Label(new_window, text=f"Variable Y ({prediction.y_title}):").grid(row=1, column=0, sticky="w")
+            Label(new_window, text=str(prediction.y)).grid(row=1, column=1, sticky="w")
+
+            Label(new_window, text=f"Correlación: {prediction.correlation:.4f}").grid(row=2, column=0, sticky="w")
+            Label(new_window, text=f"Bondad de ajuste: {prediction.bondad:.4f}").grid(row=3, column=0, sticky="w")
+
+        except (EOFError, pickle.UnpicklingError):
+            showerror("Error", "Formato de archivo no válido o corrupto.")
