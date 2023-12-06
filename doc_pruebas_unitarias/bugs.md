@@ -10,9 +10,8 @@
 
 # Bugs sin solucionar
 
-
-
 # Preguntas
 
 ## Pasar de .py a .exe
+
 py -3.11 -m PyInstaller --onefile --noconsole --icon=icono.ico lol.py -F -w 

@@ -20,7 +20,8 @@ def generate_labels_prediction(window, prediction):
     Genera los labels para mostrar la ecuacion de la recta, la bondad de ajuste y el error cometido del archivo pkl.
     '''
     global graph_labels,bondad_label, ecuacion_label, error_label, \
-        select_x_entry, prediction_button, select_x_label, description
+        select_x_entry, prediction_button, select_x_label, description,\
+        prediction_label
         # Eliminamos los labels anteriores
     if 'graph_labels' in globals() and graph_labels is not None:
         graph_labels.destroy()
@@ -46,7 +47,8 @@ def generate_labels_prediction(window, prediction):
     select_x_entry = Entry(graph_labels, width=20)
     select_x_entry.insert(0, prediction.x_title)
     select_x_entry.grid(row=2, column=1, pady=1, sticky="w")
-    
+    prediction_label = Label(graph_labels, text=f"")
+    prediction_label.grid(row=2, column=0, pady=1, sticky="w")
     # -------------------BONDAD DE AJUSTE Y ERROR COMETIDO-------------------
     bondad_label = Label(graph_labels, text=f"Bondad de ajuste (R^2): {prediction.bondad:.4f}")
     bondad_label.grid(row=3, column=0, pady=1, sticky="w")
@@ -63,5 +65,7 @@ def generate_prediction2(prediction):
         y_prediction = prediction.m * x_value + prediction.b              # Prediccion de y
         # Modificamos el label de la ecuacion de la recta para mostrar la prediccion de y
         ecuacion_label.config(text=f"Ecuación de la recta: {prediction.m:.4f}x + {prediction.b:.4f} = {y_prediction:.4f}")
+        prediction_label.config(text=f"Para x = {x_value:.2f}, la prediccion de y es {y_prediction:.2f}.")
+
     except ValueError:
         showerror("Error", "El valor de x debe ser un número")

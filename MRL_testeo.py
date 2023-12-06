@@ -82,7 +82,7 @@ def generate_prediction(x):
     '''
     global PREDICTION_COUNTER
     try:
-        x_value = float(select_x_entry.get())       # Valor de x para generar la prediccion de y
+        x_value = 14       # Valor de x para generar la prediccion de y
         
         if x_value < min(x) or x_value > max(x):
             showerror("Error", "El valor de x debe estar entre los valores de x de la muestra")
