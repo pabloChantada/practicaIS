@@ -24,7 +24,7 @@ def generate_labels_prediction(window, prediction):
         # Eliminamos los labels anteriores
     if 'graph_labels' in globals() and graph_labels is not None:
         graph_labels.destroy()
-    
+
     graph_labels = Frame(window)                            # Creamos el frame para los labels
     graph_labels.pack(side=BOTTOM)                          # Posicion del frame
 
