@@ -17,10 +17,17 @@ prediction_button = None
 select_x_label = None
 description = None
 
-def modelo_regresion_lineal(window, x, y, x_title, y_title):
+def modelo_regresion_lineal(window, x: list, y: list, x_title: str, y_title: str):
     '''
     Muestra el grafico de regresion lineal, la ecuacion de la recta, la bondad de ajuste, el error cometido
     y devuelve la prediccion.
+
+    Parametros:
+    window: Ventana master
+    x: Columna x seleccionada del dataframe
+    y: Columna y seleccionada del dataframe
+    x_title: Nombre de la columna x del dataframe
+    y_title: Nombre de la columna y del dataframe
     '''               
     global bondad, m, b, error
 
@@ -40,9 +47,14 @@ def modelo_regresion_lineal(window, x, y, x_title, y_title):
     prediction = Predictions(punto_corte_x, x_title, m,b, error,bondad, description_var)
     return prediction
 
-def generate_labels(window, x_title, x):
+def generate_labels(window, x_title: str, x: list): 
     '''
     Elimina los elementos de la ventana y crea los nuevos labels.
+
+    Parametros:
+    window: Ventana master
+    x_title: Nombre de la columna x del dataframe
+    x: Columna x seleccionada del dataframe
     '''
     global graph_labels, bondad_label, ecuacion_label, error_label, \
         select_x_entry, prediction_button, select_x_label, description, prediction_label
@@ -86,6 +98,9 @@ def generate_labels(window, x_title, x):
 def generate_prediction(x):
     '''
     Genera una prediccion de y para un valor de x.
+
+    Parametros:
+    x: Columna x seleccionada del dataframe
     '''
     global PREDICTION_COUNTER
     try:
@@ -120,6 +135,14 @@ def get_description():
 def graph(window, x, y, x_title, y_title, y_pred):
     '''
     Genera el grafico de regresion lineal y los labels necesarios.
+
+    Parametros:
+    window: Ventana master
+    x: Columna x seleccionada del dataframe
+    y: Columna y seleccionada del dataframe
+    x_title: Nombre de la columna x del dataframe
+    y_title: Nombre de la columna y del dataframe
+    y_pred: Predicción del valor y a partir de un valor x    
     '''
     global fig, ax, canvas
     
