@@ -10,7 +10,7 @@ seleccionar la opción de __Descargar ZIP__.
 Para iniciar el progama tenemos tres opciones:
 
 1. Linea de comandos con (estando en la carpeta inicial):
-´´python .\gui.py´´
+```python .\gui.py```
 2. Ejecutando el codigo __gui.py__ en un IDE
 3. _Ejecutando mrl.exe (aun no implementado)_
 
