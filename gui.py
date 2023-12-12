@@ -118,6 +118,8 @@ def generate_var(data):
     Genera las variables que empleará el modelo de regresión lineal
 
     Parametros:
+    --------------
+
     data: Dataframe sin valores nulos
     '''
     global variable_x, variable_y
@@ -155,7 +157,10 @@ def generate_var(data):
 def dataframe(data):
     '''
     Muestra el Dataframe
+    
     Parametros:
+    --------------
+
     data: Dataframe sin valores nulos
     '''
     # -------------------DATAFRAME-------------------
@@ -169,7 +174,10 @@ def dataframe(data):
 def show_file_path(file_open):
     '''
     Muestra la ruta del archivo abierto.
+    
     Parametros:
+    --------------
+
     file_open: Archivo que se abre
     '''
     file_path_frame = Frame(window)                     # Creamos el frame para la ruta del archivo

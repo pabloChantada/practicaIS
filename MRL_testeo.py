@@ -22,7 +22,9 @@ def modelo_regresion_lineal(window, x: list, y: list, x_title: str, y_title: str
     Muestra el grafico de regresion lineal, la ecuacion de la recta, la bondad de ajuste, el error cometido
     y devuelve la prediccion.
 
-    Parametros:
+    Parámetros:
+    --------------
+
     window: Ventana master
     x: Columna x seleccionada del dataframe
     y: Columna y seleccionada del dataframe
@@ -52,6 +54,8 @@ def generate_labels(window, x_title: str, x: list):
     Elimina los elementos de la ventana y crea los nuevos labels.
 
     Parametros:
+    --------------
+
     window: Ventana master
     x_title: Nombre de la columna x del dataframe
     x: Columna x seleccionada del dataframe
@@ -95,11 +99,13 @@ def generate_labels(window, x_title: str, x: list):
     error_label = Label(graph_labels, text=f"Error cometido: {error}")
     error_label.grid(row=5, column=0, pady=2, sticky="w")
 
-def generate_prediction(x):
+def generate_prediction(x:  list):
     '''
     Genera una prediccion de y para un valor de x.
 
     Parametros:
+    --------------
+
     x: Columna x seleccionada del dataframe
     '''
     global PREDICTION_COUNTER
@@ -132,11 +138,13 @@ def get_description():
     '''
     return description.get("1.0", "end-1c") 
 
-def graph(window, x, y, x_title, y_title, y_pred):
+def graph(window, x: list, y: list, x_title: str, y_title: str, y_pred: list):
     '''
     Genera el grafico de regresion lineal y los labels necesarios.
 
     Parametros:
+    --------------
+    
     window: Ventana master
     x: Columna x seleccionada del dataframe
     y: Columna y seleccionada del dataframe
@@ -165,7 +173,7 @@ def graph(window, x, y, x_title, y_title, y_pred):
 
     # ====================GENERACION DE LABELS====================
     
-    generate_labels(window, x_title, x)                                        # Generamos los labels   
+    generate_labels(window, x_title: str, x: list)                                        # Generamos los labels   
     
     # ====================GRAFICO====================
 

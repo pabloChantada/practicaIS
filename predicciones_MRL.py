@@ -15,11 +15,13 @@ class Predictions:
     bondad: float
     description: str
            
-def generate_labels_prediction(window, prediction):
+def generate_labels_prediction(window, prediction: object):
     '''
     Genera los labels para mostrar la ecuacion de la recta, la bondad de ajuste y el error cometido del archivo pkl.
 
     Parametros:
+    --------------
+
     window: Ventana master
     prediction: Objeto que guarda la predicción
     '''
@@ -64,11 +66,12 @@ def generate_labels_prediction(window, prediction):
     error_label = Label(graph_labels, text=f"Error cometido: {prediction.error}")
     error_label.grid(row=4, column=0, pady=2, sticky="w")
     
-def generate_prediction2(prediction):
+def generate_prediction2(prediction: object):
     '''
     Genera una prediccion de y para un valor de x del archivo pkl.
 
     Parámetros:
+    --------------
     prediction: Objeto que guarda la predicción
     '''
     try:
