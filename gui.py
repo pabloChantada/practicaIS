@@ -78,7 +78,6 @@ def load_model():
         try:
             prediction = pickle.load(f)
             clear_gui()
-
             show_file_path(file)
             generate_labels_prediction(window, prediction)
 
