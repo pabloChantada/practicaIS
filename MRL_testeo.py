@@ -26,11 +26,15 @@ def modelo_regresion_lineal(window, x, y, x_title, y_title):
 
     model = LinearRegression().fit(x, y)                       # Creamos el modelo de regresion lineal 
     y_pred = model.predict(x)                                  # Predecimos los valores de y
+
     m = model.coef_[0][0]                                      # Coeficiente de la recta
     b = model.intercept_[0]                                    # Termino independiente de la recta
+
     punto_corte_x = -b/m                                       # Punto de corte en el eje x
+
     error = mean_squared_error(y, y_pred)                      # Error cometido
     bondad = model.score(x, y)                                 # Bondad de ajuste (R^2)
+
     description_var = graph(window, x, y, x_title, y_title, y_pred)  # Graficamos y generamos los labels
     # Guardamos los resultados de la regresion lineal en una clase
     prediction = Predictions(punto_corte_x, x_title, m,b, error,bondad, description_var)
@@ -57,14 +61,17 @@ def generate_labels(window, x_title, x):
     # -------------------ECUACION DE LA RECTA Y BOTON DE PREDICCION-------------------
     ecuacion_label = Label(graph_labels, text=f"Ecuación de la recta: {m:.4f}x + {b:.4f} = y")
     ecuacion_label.grid(row=1, column=0, pady=1, sticky="w")
+
     prediction_button = Button(graph_labels, text="Predecir", width=15, command=lambda: generate_prediction(x))
     prediction_button.grid(row=1, column=1, pady=1, sticky="w")
+
     prediction_label = Label(graph_labels, text=f"")
     prediction_label.grid(row=2, column=0, pady=1, sticky="w")
 
     # -------------------VALOR DE X PARA GENERAR LA PREDICCION DE Y-------------------
     select_x_label = Label(graph_labels, text="Valor de x para generar la prediccion de y: ")
     select_x_label.grid(row=3, column=0, pady=1, sticky="w")
+
     select_x_entry = Entry(graph_labels, width=20)
     select_x_entry.insert(0, x_title)
     select_x_entry.grid(row=3, column=1, pady=1, sticky="w")
@@ -82,17 +89,20 @@ def generate_prediction(x):
     '''
     global PREDICTION_COUNTER
     try:
-        x_value = 14       # Valor de x para generar la prediccion de y
-        
+        x_value = float(select_x_entry.get())      # Cojemos el valor de x introducido por el usuario      
         if x_value < min(x) or x_value > max(x):
             showerror("Error", "El valor de x debe estar entre los valores de x de la muestra")
             return
+        
         y_prediction = m * x_value + b              # Prediccion de y
+
         # Modificamos el label de la ecuacion de la recta para mostrar la prediccion de y
         ecuacion_label.config(text=f"Ecuación de la recta: {m:.4f}*({x_value}) + {b:.4f} = {y_prediction:.4f}")
         prediction_label.config(text=f"Para x = {x_value:.2f}, la prediccion de y es {y_prediction:.2f}.")
         #ecuacion_label.config(text=f"Para x = {x_value:.2f}, la prediccion de y es {y_prediction:.2f}.")
+
         PREDICTION_COUNTER += 1                     # Incrementamos el contador de predicciones
+        
         # Mostramos la prediccion en el grafico
         ax.scatter(x_value, y_prediction, color='black', marker='o', label=f'Predicción {PREDICTION_COUNTER}')
         ax.legend()  
