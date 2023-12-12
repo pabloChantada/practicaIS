@@ -17,7 +17,7 @@ prediction_button = None
 select_x_label = None
 description = None
 
-def modelo_regresion_lineal(window, x: list, y: list, x_title: str, y_title: str):
+def modelo_regresion_lineal(window, x:list, y:list, x_title:str, y_title:str):
     '''
     Muestra el grafico de regresion lineal, la ecuacion de la recta, la bondad de ajuste, el error cometido
     y devuelve la prediccion.
@@ -49,7 +49,7 @@ def modelo_regresion_lineal(window, x: list, y: list, x_title: str, y_title: str
     prediction = Predictions(punto_corte_x, x_title, m,b, error,bondad, description_var)
     return prediction
 
-def generate_labels(window, x_title: str, x: list): 
+def generate_labels(window, x_title:str, x:list): 
     '''
     Elimina los elementos de la ventana y crea los nuevos labels.
 
@@ -99,7 +99,7 @@ def generate_labels(window, x_title: str, x: list):
     error_label = Label(graph_labels, text=f"Error cometido: {error}")
     error_label.grid(row=5, column=0, pady=2, sticky="w")
 
-def generate_prediction(x:  list):
+def generate_prediction(x:list):
     '''
     Genera una prediccion de y para un valor de x.
 
@@ -173,8 +173,7 @@ def graph(window, x: list, y: list, x_title: str, y_title: str, y_pred: list):
 
     # ====================GENERACION DE LABELS====================
     
-    generate_labels(window, x_title: str, x: list)                                        # Generamos los labels   
-    
+    generate_labels(window, x_title, x)                                     # Generamos los labels    
     # ====================GRAFICO====================
 
     canvas = FigureCanvasTkAgg(fig, master=window)                          # Creamos el canvas
