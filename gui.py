@@ -33,7 +33,7 @@ def open_file():
             conn.close()                                # Cerramos la DB
         case "pkl":
             show_file_path(file_open)                   # Mostramos la ruta del archivo
-            load_file()                                 # Cargamos el archivo pickle
+            load_model()                                 # Cargamos el archivo pickle
         case _:                                         # Caso de fallo                         
             showerror("Error al abrir el archivo",\
                     "No se selecciono un archivo valido o se produjo un error al leerlo.")
@@ -65,27 +65,22 @@ def save_file():
     except Exception as e:
         showerror("Error", "Error al guardar el archivo: " + str(e))
 
-def load_file():
-    file = askopenfilename(defaultextension=".txt",         # Abrimos el explorador de archivos
-                        filetypes= [("Pickle File",".pkl")])
-    for widget in window.winfo_children():          # Eliminamos los widgets de la ventana
+def clear_gui():
+
+    for widget in window.winfo_children():
         if widget != menu_bar:
             widget.destroy()
+
+def load_model():
+    file = askopenfilename(defaultextension=".txt", filetypes=[("Pickle File", ".pkl")])
+
     with open(file, 'rb') as f:
         try:
             prediction = pickle.load(f)
-            if MRL_testeo.ecuacion_label is None:
-                show_file_path(file)                       # Mostramos la ruta del archivo
-                generate_labels_prediction(window, prediction)
-            else:
-                show_file_path(file)                       # Mostramos la ruta del archivo
-                MRL_testeo.description.delete("1.0", "end")
-                MRL_testeo.description.insert("end", prediction.description)
-                MRL_testeo.select_x_entry.delete(0, END)
-                MRL_testeo.select_x_entry.insert(0, prediction.x_title)
-                MRL_testeo.ecuacion_label.config(text=f"Ecuación de la recta: {prediction.m:.4f}x + {prediction.b:.4f} = y")
-                MRL_testeo.bondad_label.config(text=f"Bondad de ajuste (R^2): {prediction.bondad:.4f}")
-                MRL_testeo.error_label.config(text=f"Error: {prediction.error:.4f}")
+            clear_gui()
+            show_file_path(file)
+            generate_labels_prediction(window, prediction)
+
         except EOFError:
             showerror("Error", "Error al seleccionar el archivo")
 
@@ -192,7 +187,7 @@ file_menu = Menu(menu_bar, tearoff=0)                        # Creamos el menu d
 menu_bar.add_cascade(label="File", menu=file_menu)           # Añadimos el menu de archivo a la barra de menu
 file_menu.add_command(label="Open file", command=open_file)  # Añadimos la opcion de abrir archivo al menu de archivo
 file_menu.add_command(label="Save file", command=save_file)  # Añadimos la opcion de guardar archivo al menu de archivo
-file_menu.add_command(label="Load model", command=load_file)
+file_menu.add_command(label="Load model", command=load_model)
 file_menu.add_separator()                                    # Añadimos una separacion al menu de archivo
 file_menu.add_command(label="Exit", command=quit)            # Añadimos la opcion de salir al menu de archivo
 
