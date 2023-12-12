@@ -19,22 +19,23 @@ def open_file():
                                     ("Excel File","*.xlsx"),    # pueden abrir
                                     ("CSV File",".csv"),
                                     ("SQL File",".db")])        
-    file_extension = file_open.split(".")[-1]                # Cojemos solo la extension
+    file_extension = file_open.split(".")[-1]                   # Cojemos solo la extension
     
-    match file_extension:                               # Comparamos la extension
-        case "csv":                                     # Si la extension es csv
+    match file_extension:                                       # Comparamos la extension
+        case "csv":                                             # Si la extension es csv
             data = pandas.read_csv(file_open)
-        case "xlsx":                                    # Si la extension es xlsx
+        case "xlsx":                                            # Si la extension es xlsx
             data = pandas.read_excel(file_open)
-        case "db":                                      # Si la extension es db
-            conn = sqlite3.connect(file_open)                # Abrimos la DB
+        case "db":                                              # Si la extension es db
+            conn = sqlite3.connect(file_open)                   # Abrimos la DB
+
             # Cojemos todas las filas de la tabla california_housing_dataset
             data = pandas.read_sql_query("SELECT * FROM  california_housing_dataset;", conn)
-            conn.close()                                # Cerramos la DB
+            conn.close()                                        # Cerramos la DB
         case "pkl":
-            show_file_path(file_open)                   # Mostramos la ruta del archivo
-            load_model()                                 # Cargamos el archivo pickle
-        case _:                                         # Caso de fallo                         
+            show_file_path(file_open)                           # Mostramos la ruta del archivo
+            load_model()                                        # Cargamos el archivo pickle
+        case _:                                                 # Caso de fallo                         
             showerror("Error al abrir el archivo",\
                     "No se selecciono un archivo valido o se produjo un error al leerlo.")
             return None                             
@@ -53,15 +54,15 @@ def save_file():
     Guarda un archivo en formato pickle.
     '''
     try:
-        prediction.description = MRL_testeo.get_description()            # Guardamos la descripcion
+        prediction.description = MRL_testeo.get_description()               # Guardamos la descripcion
         
-        file = asksaveasfilename(initialfile="prediction.pkl",           # Mostramos el explorador de archivos
+        file = asksaveasfilename(initialfile="prediction.pkl",              # Mostramos el explorador de archivos
                                 defaultextension=".pkl",
                                 filetypes=[("Pickle Files",".pkl")])
 
-        if file:                                                         # Si el archivo ya existe
-            with open(file, 'wb') as f:                                  # Abriremos el archivo en modo escritura binaria
-                pickle.dump(prediction, f)                           # Guardamos el objeto en el archivo
+        if file:                                                            # Si el archivo ya existe
+            with open(file, 'wb') as f:                                     # Abriremos el archivo en modo escritura binaria
+                pickle.dump(prediction, f)                                  # Guardamos el objeto en el archivo
     except Exception as e:
         showerror("Error", "Error al guardar el archivo: " + str(e))
 
@@ -84,8 +85,9 @@ def load_model():
         except EOFError:
             showerror("Error", "Error al seleccionar el archivo")
 
+# Mostramos un mensaje con los autores
 def about():
-    showinfo("Autores", "Pablo Chantada Saborido\n"        # Mostramos un mensaje con los autores
+    showinfo("Autores", "Pablo Chantada Saborido\n"        
                         "Pablo Verdes Sánchez\n"
                         "Claudia Vidal\n"
                         "Aldana Medyna\n"
@@ -97,8 +99,8 @@ def create():
     '''
     Crea el modelo de regresion lineal.
     '''
-    global prediction                       # Hacemos la variable global para poder guardarla
-    if variable_x.get() == 'Select' or variable_y.get() == 'Select':   # Comprobamos que no haya valores nulos
+    global prediction                                                   # Hacemos la variable global para poder guardarla
+    if variable_x.get() == 'Select' or variable_y.get() == 'Select':    # Comprobamos que no haya valores nulos
         showerror("Error", "No se pueden introducir valores nulos")
         
     else:
@@ -110,6 +112,7 @@ def create():
         else:
             x_col_reshaped = x_col.values.reshape(-1, 1)  # Redimensionamos los valores de x
             y_col_reshaped = y_col.values.reshape(-1, 1)  # Redimensionamos los valores de y
+
             # Guardamos el resultado de la funcion mrl_testeo en la variable prediction
             prediction = mrl(window, x_col_reshaped, y_col_reshaped, variable_x.get(), variable_y.get())        
 
@@ -128,7 +131,10 @@ def generate_var(data):
     buttons.pack(side=LEFT, fill=Y)                     # Posicion del frame
 
     titulo = data.columns                               # Cojemos los titulos de las columnas
+
+    #Esto lo quitamos??:
     # opciones = [i for i in titulo if not isinstance(data[i], str)]
+
     opciones = []                                       # Lista para guardar las opciones de las variables
     for i in titulo:
         if not isinstance(data[i][1], str):             # Evitamos las columnas con strings
@@ -187,18 +193,20 @@ def show_file_path(file_open):
     
 # ===================GEOMETRIA DE LA VENTANA===================
 
-window = Tk()                                      # Creamos la ventana
+window = Tk()                                           # Creamos la ventana
 
-window.title("Modelo de Regresión Lineal")         # Titulo de la ventana
+window.title("Modelo de Regresión Lineal")              # Titulo de la ventana
 
-window_height = 850                                # Altura de la ventana
-window_width = 1000                                # Ancho de la ventana
-screen_height = window.winfo_screenheight()        # Alto de la pantalla
-screen_width = window.winfo_screenwidth()          # Largo de la pantalla
-x = int((screen_width/ 2) - (window_width / 2))       # Ajustamos la coordenada x a la pantalla
-y = int((screen_height/ 2.15) - (window_height / 2))  # Ajustamos la coordenada y a la pantalla
-window.geometry("{}x{}+{}+{}".format(window_width, window_height, x, y))    # Ajustamos la geometria de la ventana
-window.resizable(False, False)                     # Hacemos que la ventana no se pueda redimensionar
+window_height = 850                                     # Altura de la ventana
+window_width = 1000                                     # Ancho de la ventana
+screen_height = window.winfo_screenheight()             # Alto de la pantalla
+screen_width = window.winfo_screenwidth()               # Largo de la pantalla
+x = int((screen_width/ 2) - (window_width / 2))         # Ajustamos la coordenada x a la pantalla
+y = int((screen_height/ 2.15) - (window_height / 2))    # Ajustamos la coordenada y a la pantalla
+
+# Ajustamos la geometria de la ventana
+window.geometry("{}x{}+{}+{}".format(window_width, window_height, x, y))    
+window.resizable(False, False)                          # Hacemos que la ventana no se pueda redimensionar
 
 # ===================MENU SUPERIOR COMANDOS===================
 
@@ -216,5 +224,5 @@ help_menu = Menu(menu_bar, tearoff=0)                        # Creamos el menu d
 menu_bar.add_cascade(label="Help", menu=help_menu)           # Añadimos el menu de ayuda a la barra de menu
 help_menu.add_command(label="About", command=about)          # Añadimos la opcion de about al menu de ayuda
 
-window.protocol("WM_DELETE_WINDOW", sys.exit)  # Cerramos la ventana al pulsar la X
+window.protocol("WM_DELETE_WINDOW", sys.exit)                # Cerramos la ventana al pulsar la X
 window.mainloop()                                            # Bucle principal de la ventana
