@@ -157,7 +157,7 @@ def generate_var(data):
     grid(row=len(titulo), column=3, sticky="w")
     
     # -------------------BOTON CREAR-------------------
-    create_button = Button(buttons, text="Create", command=create).\
+    create_button = Button(buttons, text="Crear", command=create).\
     grid(row=len(titulo) + 1, column=0, sticky="w")
     
 def dataframe(data):
