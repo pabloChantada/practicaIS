@@ -86,7 +86,7 @@ def load_model():
 
 def about():
     showinfo("Autores", "Pablo Chantada Saborido\n"        # Mostramos un mensaje con los autores
-                        "Pablo Verdes\n"
+                        "Pablo Verdes Sánchez\n"
                         "Claudia Vidal\n"
                         "Aldana Medyna\n"
                         "Ana Valls")
@@ -114,6 +114,14 @@ def create():
             prediction = mrl(window, x_col_reshaped, y_col_reshaped, variable_x.get(), variable_y.get())        
 
 def generate_var(data):
+    '''
+    Genera las variables que empleará el modelo de regresión lineal
+
+    Parametros:
+    --------------
+
+    data: Dataframe sin valores nulos
+    '''
     global variable_x, variable_y
     # -------------------BOTONES-------------------
     buttons = Frame(window)                             # Creamos el frame para los botones 
@@ -147,6 +155,14 @@ def generate_var(data):
     grid(row=len(titulo) + 1, column=0, sticky="w")
     
 def dataframe(data):
+    '''
+    Muestra el Dataframe
+    
+    Parametros:
+    --------------
+
+    data: Dataframe sin valores nulos
+    '''
     # -------------------DATAFRAME-------------------
 
     dataframe = Frame(window)                           # Creamos el frame para el dataframe
@@ -158,6 +174,11 @@ def dataframe(data):
 def show_file_path(file_open):
     '''
     Muestra la ruta del archivo abierto.
+    
+    Parametros:
+    --------------
+
+    file_open: Archivo que se abre
     '''
     file_path_frame = Frame(window)                     # Creamos el frame para la ruta del archivo
     file_path_frame.pack(side=BOTTOM, fill=X)           # Posicion del frame
