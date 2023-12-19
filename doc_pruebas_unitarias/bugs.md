@@ -15,3 +15,7 @@
 ## Pasar de .py a .exe
 
 py -3.11 -m PyInstaller --onefile --noconsole --icon=icono.ico lol.py -F -w 
+
+# Tags a commits
+git tag v0.0.2(tag) 8dcc8b6ac831011d7a98b4034ad90bb1e4d99be1(commit id)
+git push origin v0.0.2(name tag)
