@@ -58,9 +58,9 @@ def save_file():
     try:
         prediction.description = MRL_testeo.get_description()               # Guardamos la descripcion
         
-        file = asksaveasfilename(initialfile = "prediction.pkl",            # Mostramos el explorador de archivos
-                                defaultextension = ".pkl",
-                                filetypes = [("Pickle Files",".pkl")])
+        file = asksaveasfilename(initialfile="prediction.pkl",              # Mostramos el explorador de archivos
+                                defaultextension=".pkl",
+                                filetypes=[("Pickle Files",".pkl")])
 
         if file:                                                            # Si el archivo ya existe
             with open(file, 'wb') as f:                                     # Abriremos el archivo en modo escritura binaria
@@ -75,7 +75,7 @@ def clear_gui():
             widget.destroy()
 
 def load_model():
-    file = askopenfilename(defaultextension = ".txt", filetypes = [("Pickle File", ".pkl")])
+    file = askopenfilename(defaultextension=".txt", filetypes=[("Pickle File", ".pkl")])
 
     with open(file, 'rb') as f:
         try:
@@ -130,7 +130,7 @@ def generate_var(data):
     global variable_x, variable_y
     # -------------------BOTONES-------------------
     buttons = Frame(window)                             # Creamos el frame para los botones 
-    buttons.pack(side = LEFT, fill = Y)                 # Posicion del frame
+    buttons.pack(side=LEFT, fill=Y)                     # Posicion del frame
 
     titulo = data.columns                               # Cojemos los titulos de las columnas
 
@@ -145,22 +145,22 @@ def generate_var(data):
     # -------------------VARIABLE X-------------------
     variable_x = StringVar(buttons)                     # Creamos la variable de strings para la variable x
     variable_x.set("Select")                            # Valor por defecto
-    x_title = Label(buttons, text = "Variable X: ").\
-        grid(row = 0, column = 0, sticky = "w")
+    x_title = Label(buttons, text="Variable X: ").\
+        grid(row=0, column=0, sticky="w")
     x_entry = OptionMenu(buttons, variable_x, *opciones).\
-        grid(row = 0, column = 1, sticky = "w")
+        grid(row=0, column=1, sticky="w")
 
     # -------------------VARIABLE Y-------------------
     variable_y = StringVar(buttons)                     # Creamos la variable de strings para la variable y
     variable_y.set("Select")  # Default value           # Valor por defecto
-    y_title = Label(buttons, text = "Variable Y: ").\
-        grid(row = 0, column = 2, sticky = "w")
+    y_title = Label(buttons, text="Variable Y: ").\
+        grid(row=0, column=2, sticky="w")
     y_entry = OptionMenu(buttons, variable_y, *opciones).\
-    grid(row = 0, column = 3, sticky = "w")
+    grid(row=0, column=3, sticky="w")
     
     # -------------------BOTON CREAR-------------------
-    create_button = Button(buttons, text = "Crear modelo", command = create).\
-    grid(row = 2, column = 0, sticky = "w")
+    create_button = Button(buttons, text="Crear modelo", command=create).\
+    grid(row=2, column=0, sticky="w")
     
 def dataframe(data):
     '''
@@ -174,9 +174,9 @@ def dataframe(data):
     # -------------------DATAFRAME-------------------
 
     dataframe = Frame(window)                           # Creamos el frame para el dataframe
-    dataframe.pack(side = TOP)                            # Posicion del frame   
+    dataframe.pack(side=TOP)                            # Posicion del frame   
     # Creamos la tabla con el dataframe
-    table = Table(dataframe, width = window_width, dataframe = data)
+    table = Table(dataframe, width=window_width, dataframe=data)
     table.show()
 
 def show_file_path(file_open):
@@ -189,9 +189,9 @@ def show_file_path(file_open):
     file_open: Archivo que se abre
     '''
     file_path_frame = Frame(window)                     # Creamos el frame para la ruta del archivo
-    file_path_frame.pack(side = BOTTOM, anchor = "sw")      # Posicion del frame en la esquina inferior izquierda
+    file_path_frame.pack(side=BOTTOM, anchor="sw")      # Posicion del frame en la esquina inferior izquierda
     file_path_label = Label(file_path_frame, text=f"File Path: {file_open}") 
-    file_path_label.pack(side = LEFT)                     # Posicion del label a la izquierda
+    file_path_label.pack(side=LEFT)                     # Posicion del label a la izquierda
     
 # ===================GEOMETRIA DE LA VENTANA===================
 
@@ -212,19 +212,19 @@ window.resizable(False, False)                          # Hacemos que la ventana
 
 # ===================MENU SUPERIOR COMANDOS===================
 
-menu_bar = Menu(window)                                             # Creamos la barra de menu
-window.config(menu=menu_bar)                                        # Añadimos la barra de menu a la ventana
-file_menu = Menu(menu_bar, tearoff = 0)                             # Creamos el menu de archivo
-menu_bar.add_cascade(label = "File", menu = file_menu)              # Añadimos el menu de archivo a la barra de menu
-file_menu.add_command(label = "Open file", command = open_file)     # Añadimos la opcion de abrir archivo al menu de archivo
-file_menu.add_command(label = "Save file", command = save_file)     # Añadimos la opcion de guardar archivo al menu de archivo
-file_menu.add_command(label = "Load model", command = load_model)
-file_menu.add_separator()                                           # Añadimos una separacion al menu de archivo
-file_menu.add_command(label = "Exit", command = sys.exit)           # Añadimos la opcion de salir al menu de archivo
+menu_bar = Menu(window)                                      # Creamos la barra de menu
+window.config(menu=menu_bar)                                 # Añadimos la barra de menu a la ventana
+file_menu = Menu(menu_bar, tearoff=0)                        # Creamos el menu de archivo
+menu_bar.add_cascade(label="File", menu=file_menu)           # Añadimos el menu de archivo a la barra de menu
+file_menu.add_command(label="Open file", command=open_file)  # Añadimos la opcion de abrir archivo al menu de archivo
+file_menu.add_command(label="Save file", command=save_file)  # Añadimos la opcion de guardar archivo al menu de archivo
+file_menu.add_command(label="Load model", command=load_model)
+file_menu.add_separator()                                    # Añadimos una separacion al menu de archivo
+file_menu.add_command(label="Exit", command=sys.exit)        # Añadimos la opcion de salir al menu de archivo
 
-help_menu = Menu(menu_bar, tearoff = 0)                             # Creamos el menu de ayuda
-menu_bar.add_cascade(label = "Help", menu = help_menu)              # Añadimos el menu de ayuda a la barra de menu
-help_menu.add_command(label = "About", command = about)             # Añadimos la opcion de about al menu de ayuda
+help_menu = Menu(menu_bar, tearoff=0)                        # Creamos el menu de ayuda
+menu_bar.add_cascade(label="Help", menu=help_menu)           # Añadimos el menu de ayuda a la barra de menu
+help_menu.add_command(label="About", command=about)          # Añadimos la opcion de about al menu de ayuda
 
-window.protocol("WM_DELETE_WINDOW", sys.exit)                       # Cerramos la ventana al pulsar la X
-window.mainloop()                                                   # Bucle principal de la ventana
+window.protocol("WM_DELETE_WINDOW", sys.exit)                # Cerramos la ventana al pulsar la X
+window.mainloop()                                            # Bucle principal de la ventana

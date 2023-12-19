@@ -77,10 +77,12 @@ def generate_labels(window, x_title:str, y_title:str):
 
     graph_labels = Frame(window)                                                    # Creamos el frame para los labels
     graph_labels.pack(side=BOTTOM)                                                  # Posicion del frame
+    description_label = Label(graph_labels, text = f"<----Descripción")
+    description_label.grid(row = 0, column = 1, pady = 1, sticky="w")
 
     description = Text(graph_labels, height=3, width=30)                            # Creamos el label de la descripcion
-    description.grid(row=0, column=0, sticky="w")                                    # Posicion de la descripcion
-    description.insert(END, "Descripción: ")                                        # Insertamos una descripcion
+    description.grid(row=0, column=0, sticky="w")                                   # Posicion de la descripcion
+  
     
     # -------------------ECUACION DE LA RECTA Y BOTON DE PREDICCION-------------------
     ecuacion_label = Label(graph_labels, text = f"{y_title} = {m:.4f}*({x_title}) + {b:.4f}")
