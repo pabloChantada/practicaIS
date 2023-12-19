@@ -220,7 +220,7 @@ file_menu.add_command(label="Open file", command=open_file)  # Añadimos la opci
 file_menu.add_command(label="Save file", command=save_file)  # Añadimos la opcion de guardar archivo al menu de archivo
 file_menu.add_command(label="Load model", command=load_model)
 file_menu.add_separator()                                    # Añadimos una separacion al menu de archivo
-file_menu.add_command(label="Exit", command=quit)            # Añadimos la opcion de salir al menu de archivo
+file_menu.add_command(label="Exit", command=sys.exit)            # Añadimos la opcion de salir al menu de archivo
 
 help_menu = Menu(menu_bar, tearoff=0)                        # Creamos el menu de ayuda
 menu_bar.add_cascade(label="Help", menu=help_menu)           # Añadimos el menu de ayuda a la barra de menu
