@@ -9,6 +9,7 @@ class Predictions:
     '''
     punto_corte_x: float
     x_title: str
+    y_title: str
     m: float
     b: float
     error: float
@@ -28,7 +29,7 @@ def generate_labels_prediction(window, prediction: object):
 
     global graph_labels, bondad_label, ecuacion_label, error_label, \
         select_x_entry, prediction_button, select_x_label, description,\
-        prediction_label
+        prediction_title, prediction_final, predicition_var
     
     # Eliminamos los labels anteriores
     if 'graph_labels' in globals() and graph_labels is not None:
@@ -47,19 +48,19 @@ def generate_labels_prediction(window, prediction: object):
 
     # Usamos lambda para generar una funcion anonima que nos permita pasarle argumentos a la funcion generate_prediction2
     # sin que se ejecute automaticamente al crear el boton
-    prediction_button = Button(graph_labels, text = "Predecir", width = 15, command = lambda: generate_prediction2(prediction))
-    prediction_button.grid(row = 1, column = 1, pady = 1, sticky = "w")
 
-    # -------------------VALOR DE X PARA GENERAR LA PREDICCION DE Y-------------------
-    select_x_label = Label(graph_labels, text = "Valor de x para generar la prediccion de y: ")
-    select_x_label.grid(row = 2, column = 0, pady = 1, sticky="w")
+    x_var_tiltle = Label(graph_labels, text = f"Variable de x para la predicción: {prediction.x_title} = ")
+    x_var_tiltle.grid(row = 2, column = 0, pady = 1, sticky = "w")
+    predicition_var = Entry(graph_labels, width = 10)
+    predicition_var.grid(row = 2, column = 1, pady = 1, sticky = "w")
+    prediction_button = Button(graph_labels, text = "Predecir", width = 10, \
+                        command = lambda: generate_prediction2(prediction))
+    prediction_button.grid(row = 2, column = 2, pady = 1, sticky = "w")
 
-    select_x_entry = Entry(graph_labels, width = 20)
-    select_x_entry.insert(0, prediction.x_title)
-    select_x_entry.grid(row = 2, column = 1, pady = 1, sticky = "w")
-
-    prediction_label = Label(graph_labels, text = f"")
-    prediction_label.grid(row = 2, column = 0, pady = 1, sticky = "w")
+    prediction_title = Label(graph_labels, text = f"{prediction.y_title} = ")
+    prediction_title.grid(row = 2, column = 3, pady = 1, sticky = "w")
+    prediction_final = Label(graph_labels, text = f"")
+    prediction_final.grid(row = 2, column = 4, pady = 1, sticky = "w")
 
     # -------------------BONDAD DE AJUSTE Y ERROR COMETIDO-------------------
     bondad_label = Label(graph_labels, text = f"Bondad de ajuste (R^2): {prediction.bondad:.4f}")
@@ -77,13 +78,13 @@ def generate_prediction2(prediction: object):
     prediction: Objeto que guarda la predicción
     '''
     try:
-        x_value = float(select_x_entry.get())                             # Valor de x para generar la prediccion de y
+        x_value = float(predicition_var.get())                             # Valor de x para generar la prediccion de y
 
         y_prediction = prediction.m * x_value + prediction.b              # Prediccion de y
         
         # Modificamos el label de la ecuacion de la recta para mostrar la prediccion de y
-        ecuacion_label.config(text = f"Ecuación de la recta: {prediction.m:.4f}x + {prediction.b:.4f} = {y_prediction:.4f}")
-        prediction_label.config(text = f"Para x = {x_value:.2f}, la prediccion de y es {y_prediction:.2f}.")
+        ecuacion_label.config(text = f"{prediction.y_title} = {prediction.m:.4f}*({x_value}) + {prediction.b:.4f}")
+        prediction_final.config(text = f"{y_prediction:.4f}")
 
     except ValueError:
         showerror("Error", "El valor de x debe ser un número")
