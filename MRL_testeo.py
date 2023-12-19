@@ -38,8 +38,11 @@ def modelo_regresion_lineal(window, x:list, y:list, x_title:str, y_title:str):
 
     m = model.coef_[0][0]                                                           # Coeficiente de la recta
     b = model.intercept_[0]                                                         # Termino independiente de la recta
-
-    punto_corte_x = -b / m                                                          # Punto de corte en el eje x
+    
+    if m != 0:
+        punto_corte_x = -b / m                                                      # Punto de corte en el eje x
+    else:
+        punto_corte_x = None
 
     error = mean_squared_error(y, y_pred)                                           # Error cometido
     bondad = model.score(x, y)                                                      # Bondad de ajuste (R^2)
@@ -48,11 +51,11 @@ def modelo_regresion_lineal(window, x:list, y:list, x_title:str, y_title:str):
     description_var = graph(window, x, y, x_title, y_title, y_pred)  
 
     # Guardamos los resultados de la regresion lineal en una clase
-    prediction = Predictions(punto_corte_x, x_title, m, b, error,bondad, description_var)
+    prediction = Predictions(punto_corte_x, x_title, y_title, m, b, error,bondad, description_var)
 
     return prediction
 
-def generate_labels(window, x_title:str, x:list): 
+def generate_labels(window, x_title:str, y_title:str): 
     '''
     Elimina los elementos de la ventana y crea los nuevos labels.
 
@@ -64,7 +67,8 @@ def generate_labels(window, x_title:str, x:list):
     x: Columna x seleccionada del dataframe
     '''
     global graph_labels, bondad_label, ecuacion_label, error_label, \
-        select_x_entry, prediction_button, select_x_label, description, prediction_label
+        select_x_entry, prediction_button, select_x_label, description, predicition_var \
+        , prediction_title, prediction_final, x_var_tiltle
         
     # Eliminamos los labels anteriores
     if 'graph_labels' in globals() and graph_labels is not None:
@@ -74,35 +78,34 @@ def generate_labels(window, x_title:str, x:list):
     graph_labels.pack(side=BOTTOM)                                                  # Posicion del frame
 
     description = Text(graph_labels, height=3, width=30)                            # Creamos el label de la descripcion
-    description.grid(row=0, column=0)                                               # Posicion de la descripcion
+    description.grid(row=0, column=0, sticky="w")                                    # Posicion de la descripcion
     description.insert(END, "Descripción: ")                                        # Insertamos una descripcion
     
     # -------------------ECUACION DE LA RECTA Y BOTON DE PREDICCION-------------------
-    ecuacion_label = Label(graph_labels, text = f"Ecuación de la recta: {m:.4f}x + {b:.4f} = y")
-    ecuacion_label.grid(row = 1, column = 0, pady = 1, sticky = "w")
+    ecuacion_label = Label(graph_labels, text = f"{y_title} = {m:.4f}*({x_title}) + {b:.4f}")
+    ecuacion_label.grid(row = 1, column = 0, pady = 1, sticky="w")
 
-    prediction_button = Button(graph_labels, text = "Predecir", width = 15, command = lambda: generate_prediction(x))
-    prediction_button.grid(row = 1, column = 1, pady = 1, sticky = "w")
+    x_var_tiltle = Label(graph_labels, text = f"Variable de x para la predicción: {x_title} = ")
+    x_var_tiltle.grid(row = 2, column = 0, pady = 1, sticky="w")
+    predicition_var = Entry(graph_labels, width = 10)
+    predicition_var.grid(row = 2, column = 1, pady = 1, sticky="w")
+    prediction_button = Button(graph_labels, text = "Predecir", width = 10, \
+                        command = lambda: generate_prediction(y_title))
+    prediction_button.grid(row = 2, column = 2, pady = 1, sticky="w")
 
-    prediction_label = Label(graph_labels, text = f"")
-    prediction_label.grid(row = 2, column = 0, pady = 1, sticky = "w")
-
-    # -------------------VALOR DE X PARA GENERAR LA PREDICCION DE Y-------------------
-    select_x_label = Label(graph_labels, text = "Valor de x para generar la prediccion de y: ")
-    select_x_label.grid(row = 3, column = 0, pady = 1, sticky = "w")
-
-    select_x_entry = Entry(graph_labels, width = 20)
-    select_x_entry.insert(0, x_title)
-    select_x_entry.grid(row = 3, column = 1, pady = 1, sticky = "w")
+    prediction_title = Label(graph_labels, text = f"{y_title} = ")
+    prediction_title.grid(row = 2, column = 3, pady = 1, sticky="w")
+    prediction_final = Label(graph_labels, text = f"")
+    prediction_final.grid(row = 2, column = 4, pady = 1, sticky="w")
     
     # -------------------BONDAD DE AJUSTE Y ERROR COMETIDO-------------------
     bondad_label = Label(graph_labels, text = f"Bondad de ajuste (R^2): {bondad:.4f}")
-    bondad_label.grid(row = 4, column = 0, pady = 1, sticky = "w")
+    bondad_label.grid(row = 4, column = 0, pady = 1, sticky="w")
     
     error_label = Label(graph_labels, text = f"Error cometido: {error}")
-    error_label.grid(row = 5, column = 0, pady = 2, sticky = "w")
+    error_label.grid(row = 5, column = 0, pady = 2, sticky="w")
 
-def generate_prediction(x:list):
+def generate_prediction(y_title:str):
     '''
     Genera una prediccion de y para un valor de x.
 
@@ -113,20 +116,13 @@ def generate_prediction(x:list):
     '''
     global PREDICTION_COUNTER
     try:
-        x_value = float(select_x_entry.get())                                       # Cojemos el valor de x introducido por el usuario      
-
-        if x_value < min(x) or x_value > max(x):
-            showerror("Error", "El valor de x debe estar entre los valores de x de la muestra")
-            return
+        x_value = float(predicition_var.get())                                       # Cojemos el valor de x introducido por el usuario      
         
         y_prediction = m * x_value + b                                              # Prediccion de y
 
         # Modificamos el label de la ecuacion de la recta para mostrar la prediccion de y
-        ecuacion_label.config(text = f"Ecuación de la recta: {m:.4f}*({x_value}) + {b:.4f} = {y_prediction:.4f}")
-        prediction_label.config(text = f"Para x = {x_value:.2f}, la prediccion de y es {y_prediction:.2f}.")
-
-        #Esto se quita??:
-        #ecuacion_label.config(text=f"Para x = {x_value:.2f}, la prediccion de y es {y_prediction:.2f}.")
+        ecuacion_label.config(text = f"{y_title} = {m:.4f}*({x_value}) + {b:.4f}")
+        prediction_final.config(text = f"{y_prediction:.4f}")
 
         PREDICTION_COUNTER += 1                                                     # Incrementamos el contador de predicciones
         
@@ -178,7 +174,7 @@ def graph(window, x: list, y: list, x_title: str, y_title: str, y_pred: list):
     ax.set_title('Regresión Lineal y Correlación entre X e Y')                      # Ponemos el titulo del grafico
 
     # ====================GENERACION DE LABELS====================
-    generate_labels(window, x_title, x)                                             # Generamos los labels 
+    generate_labels(window, x_title, y_title)                                             # Generamos los labels 
 
     # ====================GRAFICO====================
     canvas = FigureCanvasTkAgg(fig, master = window)                                # Creamos el canvas
