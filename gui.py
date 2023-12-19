@@ -207,7 +207,7 @@ x = int((screen_width/ 2) - (window_width / 2))         # Ajustamos la coordenad
 y = int((screen_height/ 2.15) - (window_height / 2))    # Ajustamos la coordenada y a la pantalla
 
 # Ajustamos la geometria de la ventana
-window.geometry("{} x {} + {} + {}".format(window_width, window_height, x, y))    
+window.geometry("{}x{}+{}+{}".format(window_width, window_height, x, y))    
 window.resizable(False, False)                          # Hacemos que la ventana no se pueda redimensionar
 
 # ===================MENU SUPERIOR COMANDOS===================
