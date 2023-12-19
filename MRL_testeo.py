@@ -16,7 +16,13 @@ select_x_entry = None
 prediction_button = None
 select_x_label = None
 description = None
-
+'''
+def modelo_regresion_lineal(window, *args):
+    x = args[0]
+    y = args[1]
+    x_title = args[2]
+    y_title = args[3]
+'''
 def modelo_regresion_lineal(window, x:list, y:list, x_title:str, y_title:str):
     '''
     Muestra el grafico de regresion lineal, la ecuacion de la recta, la bondad de ajuste, el error cometido
@@ -140,6 +146,14 @@ def get_description():
     '''
     return description.get("1.0", "end-1c") 
 
+'''
+def graph(window, *args):
+    x = args[0]
+    y = args[1]
+    x_title = args[2]
+    y_title = args[3]
+    y_pred = args[4]
+'''
 def graph(window, x: list, y: list, x_title: str, y_title: str, y_pred: list):
     '''
     Genera el grafico de regresion lineal y los labels necesarios.
