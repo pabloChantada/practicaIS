@@ -38,8 +38,11 @@ def modelo_regresion_lineal(window, x:list, y:list, x_title:str, y_title:str):
 
     m = model.coef_[0][0]                                                           # Coeficiente de la recta
     b = model.intercept_[0]                                                         # Termino independiente de la recta
-
-    punto_corte_x = -b / m                                                          # Punto de corte en el eje x
+    
+    if m != 0:
+        punto_corte_x = -b / m                                                      # Punto de corte en el eje x
+    else:
+        punto_corte_x = None
 
     error = mean_squared_error(y, y_pred)                                           # Error cometido
     bondad = model.score(x, y)                                                      # Bondad de ajuste (R^2)
