@@ -45,9 +45,11 @@ def open_file():
             if widget != menu_bar:
                 widget.destroy()
         data = data.dropna()                            # Eliminamos los valores nulos       
+        dataframe(data)                                 # Generamos el dataframe
         show_file_path(file_open)                       # Mostramos la ruta del archivo
         generate_var(data)                              # Generamos las variables
-        dataframe(data)                                 # Generamos el dataframe
+
+
 
 def save_file():
     '''
@@ -144,21 +146,21 @@ def generate_var(data):
     variable_x = StringVar(buttons)                     # Creamos la variable de strings para la variable x
     variable_x.set("Select")                            # Valor por defecto
     x_title = Label(buttons, text="Variable X: ").\
-        grid(row=len(titulo), column=0, sticky="w")
+        grid(row=0, column=0, sticky="w")
     x_entry = OptionMenu(buttons, variable_x, *opciones).\
-        grid(row=len(titulo), column=1, sticky="w")
+        grid(row=0, column=1, sticky="w")
 
     # -------------------VARIABLE Y-------------------
     variable_y = StringVar(buttons)                     # Creamos la variable de strings para la variable y
     variable_y.set("Select")  # Default value           # Valor por defecto
     y_title = Label(buttons, text="Variable Y: ").\
-        grid(row=len(titulo), column=2, sticky="w")
+        grid(row=0, column=2, sticky="w")
     y_entry = OptionMenu(buttons, variable_y, *opciones).\
-    grid(row=len(titulo), column=3, sticky="w")
+    grid(row=0, column=3, sticky="w")
     
     # -------------------BOTON CREAR-------------------
     create_button = Button(buttons, text="Crear", command=create).\
-    grid(row=len(titulo) + 1, column=0, sticky="w")
+    grid(row=2, column=0, sticky="w")
     
 def dataframe(data):
     '''
@@ -187,9 +189,9 @@ def show_file_path(file_open):
     file_open: Archivo que se abre
     '''
     file_path_frame = Frame(window)                     # Creamos el frame para la ruta del archivo
-    file_path_frame.pack(side=BOTTOM, fill=X)           # Posicion del frame
+    file_path_frame.pack(side=BOTTOM, anchor="sw")      # Posicion del frame en la esquina inferior izquierda
     file_path_label = Label(file_path_frame, text=f"File Path: {file_open}") 
-    file_path_label.grid(row=4, column=1, sticky="w")   # Posicion del label   
+    file_path_label.pack(side=LEFT)                     # Posicion del label a la izquierda
     
 # ===================GEOMETRIA DE LA VENTANA===================
 
