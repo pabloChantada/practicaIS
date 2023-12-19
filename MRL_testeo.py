@@ -51,6 +51,7 @@ def modelo_regresion_lineal(window, x:list, y:list, x_title:str, y_title:str):
     description_var = graph(window, x, y, x_title, y_title, y_pred)  
 
     # Guardamos los resultados de la regresion lineal en una clase
+
     prediction = Predictions(punto_corte_x, x_title, y_title, m, b, error,bondad, description_var)
 
     return prediction
@@ -116,11 +117,13 @@ def generate_prediction(y_title:str):
     '''
     global PREDICTION_COUNTER
     try:
+
         x_value = float(predicition_var.get())                                       # Cojemos el valor de x introducido por el usuario      
         
         y_prediction = m * x_value + b                                              # Prediccion de y
 
         # Modificamos el label de la ecuacion de la recta para mostrar la prediccion de y
+
         ecuacion_label.config(text = f"{y_title} = {m:.4f}*({x_value}) + {b:.4f}")
         prediction_final.config(text = f"{y_prediction:.4f}")
 
@@ -174,6 +177,7 @@ def graph(window, x: list, y: list, x_title: str, y_title: str, y_pred: list):
     ax.set_title('Regresión Lineal y Correlación entre X e Y')                      # Ponemos el titulo del grafico
 
     # ====================GENERACION DE LABELS====================
+
     generate_labels(window, x_title, y_title)                                             # Generamos los labels 
 
     # ====================GRAFICO====================
