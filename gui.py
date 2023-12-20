@@ -199,7 +199,7 @@ window = Tk()                                           # Creamos la ventana
 
 window.title("Modelo de Regresión Lineal")              # Titulo de la ventana
 
-window_height = 850                                     # Altura de la ventana
+window_height = 900                                     # Altura de la ventana
 window_width = 1000                                     # Ancho de la ventana
 screen_height = window.winfo_screenheight()             # Alto de la pantalla
 screen_width = window.winfo_screenwidth()               # Largo de la pantalla
