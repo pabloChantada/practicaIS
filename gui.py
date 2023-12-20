@@ -196,10 +196,10 @@ def show_file_path(file_open):
 # ===================GEOMETRIA DE LA VENTANA===================
 
 window = Tk()                                           # Creamos la ventana
-
+#window.iconbitmap("practicaIS\\icono.ico")                           # Añadimos el icono de la ventana
 window.title("Modelo de Regresión Lineal")              # Titulo de la ventana
 
-window_height = 900                                     # Altura de la ventana
+window_height = 860                                     # Altura de la ventana
 window_width = 1000                                     # Ancho de la ventana
 screen_height = window.winfo_screenheight()             # Alto de la pantalla
 screen_width = window.winfo_screenwidth()               # Largo de la pantalla
