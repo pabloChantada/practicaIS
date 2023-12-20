@@ -7,14 +7,14 @@ class Predictions:
     '''
     Clase para guardar las predicciones de los modelos de regresión lineal.
     '''
-    punto_corte_x: float
-    x_title: str
-    y_title: str
-    m: float
-    b: float
-    error: float
-    bondad: float
-    description: str
+    _punto_corte_x: float
+    _x_title: str
+    _y_title: str
+    _m: float
+    _b: float
+    _error: float
+    _bondad: float
+    _description: str
            
 def generate_labels_prediction(window, prediction: object):
     '''
