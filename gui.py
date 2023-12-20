@@ -159,7 +159,7 @@ def generate_var(data):
     grid(row=0, column=3, sticky="w")
     
     # -------------------BOTON CREAR-------------------
-    create_button = Button(buttons, text="Crear", command=create).\
+    create_button = Button(buttons, text="Crear modelo", command=create).\
     grid(row=2, column=0, sticky="w")
     
 def dataframe(data):
@@ -199,7 +199,7 @@ window = Tk()                                           # Creamos la ventana
 
 window.title("Modelo de Regresión Lineal")              # Titulo de la ventana
 
-window_height = 850                                     # Altura de la ventana
+window_height = 900                                     # Altura de la ventana
 window_width = 1000                                     # Ancho de la ventana
 screen_height = window.winfo_screenheight()             # Alto de la pantalla
 screen_width = window.winfo_screenwidth()               # Largo de la pantalla
@@ -220,7 +220,7 @@ file_menu.add_command(label="Open file", command=open_file)  # Añadimos la opci
 file_menu.add_command(label="Save file", command=save_file)  # Añadimos la opcion de guardar archivo al menu de archivo
 file_menu.add_command(label="Load model", command=load_model)
 file_menu.add_separator()                                    # Añadimos una separacion al menu de archivo
-file_menu.add_command(label="Exit", command=sys.exit)            # Añadimos la opcion de salir al menu de archivo
+file_menu.add_command(label="Exit", command=sys.exit)        # Añadimos la opcion de salir al menu de archivo
 
 help_menu = Menu(menu_bar, tearoff=0)                        # Creamos el menu de ayuda
 menu_bar.add_cascade(label="Help", menu=help_menu)           # Añadimos el menu de ayuda a la barra de menu

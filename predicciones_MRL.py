@@ -38,35 +38,39 @@ def generate_labels_prediction(window, prediction: object):
     graph_labels = Frame(window)                                            # Creamos el frame para los labels
     graph_labels.pack(side=BOTTOM)                                          # Posicion del frame
 
-    description = Text(graph_labels, height = 3, width = 30)                # Create the label for the description
-    description.grid(row = 0, column = 0)                                   # Position the label
-    description.insert(END, prediction.description)                         # Insertamos una descripcion
+    description_label = Label(graph_labels, text = f"Descripción:")
+    description_label.grid(row=0, column=0, pady =1, sticky="w")
+    scrollbar = Scrollbar(graph_labels)
+    scrollbar.grid(row=1, column=1, sticky='ns')
+    description = Text(graph_labels, height=3, width=30, yscrollcommand=scrollbar.set)   # Creamos el label de la descripcion
+    description.grid(row=1, column=0, sticky="w")                                   # Posicion de la descripcion
+    scrollbar.config(command=description.yview)
     
     # -------------------ECUACION DE LA RECTA Y BOTON DE PREDICCION-------------------
     ecuacion_label = Label(graph_labels, text = f"Ecuación de la recta: {prediction.m:.4f}x + {prediction.b:.4f} = y")
-    ecuacion_label.grid(row = 1, column = 0, pady = 1, sticky = "w")
+    ecuacion_label.grid(row = 2, column = 0, pady = 1, sticky = "w")
 
     # Usamos lambda para generar una funcion anonima que nos permita pasarle argumentos a la funcion generate_prediction2
     # sin que se ejecute automaticamente al crear el boton
     x_var_tiltle = Label(graph_labels, text = f"Variable de x para la predicción: {prediction.x_title} = ")
-    x_var_tiltle.grid(row = 2, column = 0, pady = 1, sticky = "w")
+    x_var_tiltle.grid(row = 3, column = 0, pady = 1, sticky = "w")
     predicition_var = Entry(graph_labels, width = 10)
-    predicition_var.grid(row = 2, column = 1, pady = 1, sticky = "w")
+    predicition_var.grid(row = 3, column = 1, pady = 1, sticky = "w")
     prediction_button = Button(graph_labels, text = "Predecir", width = 10, \
                         command = lambda: generate_prediction2(prediction))
-    prediction_button.grid(row = 2, column = 2, pady = 1, sticky = "w")
+    prediction_button.grid(row = 3, column = 2, pady = 1, sticky = "w")
 
     prediction_title = Label(graph_labels, text = f"{prediction.y_title} = ")
-    prediction_title.grid(row = 2, column = 3, pady = 1, sticky = "w")
+    prediction_title.grid(row = 3, column = 3, pady = 1, sticky = "w")
     prediction_final = Label(graph_labels, text = f"")
-    prediction_final.grid(row = 2, column = 4, pady = 1, sticky = "w")
+    prediction_final.grid(row = 3, column = 4, pady = 1, sticky = "w")
 
     # -------------------BONDAD DE AJUSTE Y ERROR COMETIDO-------------------
     bondad_label = Label(graph_labels, text = f"Bondad de ajuste (R^2): {prediction.bondad:.4f}")
-    bondad_label.grid(row = 3, column = 0, pady = 1, sticky = "w")
+    bondad_label.grid(row = 4, column = 0, pady = 1, sticky = "w")
     
     error_label = Label(graph_labels, text=f"Error cometido: {prediction.error}")
-    error_label.grid(row = 4, column = 0, pady = 2, sticky="w")
+    error_label.grid(row = 5, column = 0, pady = 2, sticky="w")
     
 def generate_prediction2(prediction: object):
     '''
