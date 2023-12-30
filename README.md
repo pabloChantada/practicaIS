@@ -8,8 +8,11 @@ Para modificar el codigo fuente es necesario instalar las siguientes librerias:
 - pandastable
 - matplotlib
 - sklearn
+
 O usando una de estas intalaciones:
+
 ```pip install pandas sqlite3 pickle tkinter pandastable matplotlib sklearn```
+
 ```python -m pip install pandas sqlite3 pickle tkinter pandastable matplotlib sklearn```
 
 Además, de tener Python 3.10 o superior.
